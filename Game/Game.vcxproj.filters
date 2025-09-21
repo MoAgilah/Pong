@@ -13,5 +13,229 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{1180ab31-3d03-4df4-8a73-c417432d3087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\AI">
+      <UniqueIdentifier>{f7e02ab8-a600-4a81-b7ff-bb3e9903c278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\States">
+      <UniqueIdentifier>{d639e520-f023-4473-b832-e87263ce9669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Scenes">
+      <UniqueIdentifier>{5a8b4877-8d77-4a3c-8774-25a035763d2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utilities">
+      <UniqueIdentifier>{ebe12cf0-7356-4eae-acfc-42f9d93c2a11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Collisions">
+      <UniqueIdentifier>{d4555ce9-7403-480d-bc7c-a4d3a9102c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\Core">
+      <UniqueIdentifier>{fa702139-88d3-4d95-955a-cb78bc310c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine\UI">
+      <UniqueIdentifier>{bbb8c453-f6ab-422d-ba28-46ba3bae544b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{18964ce2-d83c-4583-8a5a-eedc11eda7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{ce1f3cf3-e3d7-45c5-b95b-efb0b1167171}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{6fe2b333-7ffe-4eb4-86ac-800f0a2de983}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\AI">
+      <UniqueIdentifier>{57298793-767d-4716-9c7c-e08d8eb2a4fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Collisions">
+      <UniqueIdentifier>{5e3f6050-3e09-4968-add6-14baabab7671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Core">
+      <UniqueIdentifier>{43696e61-8582-43c9-a023-bce1f9e8547c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Scenes">
+      <UniqueIdentifier>{668fa209-a088-474b-9178-9b20ed688387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\States">
+      <UniqueIdentifier>{3bd8c081-1b8a-4451-baf7-8e848945b97b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\UI">
+      <UniqueIdentifier>{a5b7e48c-f496-4d21-99e1-34d0c9166b21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utilities">
+      <UniqueIdentifier>{11c8422f-5114-4dac-85fd-0cb1cd110945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Font">
+      <UniqueIdentifier>{c053cc72-9b15-43b0-8eae-4100bae19fb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Music">
+      <UniqueIdentifier>{696a109e-1962-4227-a216-05c77213b0f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shader">
+      <UniqueIdentifier>{9d3a8eda-41a2-44aa-8dd8-817cb0449f54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sounds">
+      <UniqueIdentifier>{e5020c1d-d139-4816-a3d5-277c9edff59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Texture">
+      <UniqueIdentifier>{510ea807-c343-43a7-a4fb-c72da463ac70}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Code\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameObjects\Ball.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameObjects\Player.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GameObjects\Wall.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\AI\GameStateEvaluator.cpp">
+      <Filter>Source Files\Engine\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\AI\PongAICtrl.cpp">
+      <Filter>Source Files\Engine\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Collisions\PongCollisionManager.cpp">
+      <Filter>Source Files\Engine\Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Core\PongFramework.cpp">
+      <Filter>Source Files\Engine\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Scenes\GameCourt.cpp">
+      <Filter>Source Files\Engine\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\Scenes\PracticeCourt.cpp">
+      <Filter>Source Files\Engine\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\DebugState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\LoadingState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\MainMenuState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\MainState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\PauseMenuState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\States\TitleState.cpp">
+      <Filter>Source Files\Engine\States</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Engine\UI\ScoreBoard.cpp">
+      <Filter>Source Files\Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utilities\BallPhysics.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utilities\DifficultyMode.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utilities\GameMode.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Utilities\MatchCtrl.cpp">
+      <Filter>Source Files\Utilities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\Engine\AI\GameStateEvaluator.h">
+      <Filter>Header Files\Engine\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\AI\PongAICtrl.h">
+      <Filter>Header Files\Engine\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\BallPhysics.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\DifficultyMode.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\GameMode.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Utilities\MatchCtrl.h">
+      <Filter>Header Files\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Scenes\GameCourt.h">
+      <Filter>Header Files\Engine\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Scenes\PracticeCourt.h">
+      <Filter>Header Files\Engine\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\DebugState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\LoadingState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\MainMenuState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\MainState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\PauseMenuState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\States\TitleState.h">
+      <Filter>Header Files\Engine\States</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Collisions\PongCollisionManager.h">
+      <Filter>Header Files\Engine\Collisions</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\Core\PongFramework.h">
+      <Filter>Header Files\Engine\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Engine\UI\ScoreBoard.h">
+      <Filter>Header Files\Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameObjects\Ball.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameObjects\Player.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GameObjects\Wall.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Resources\Fonts\Pong.ttf">
+      <Filter>Resource Files\Font</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Textures\Ball.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\Court.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\CtrlCursor.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\Paddle.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\SideWall.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\Title.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
+    <Image Include="Resources\Textures\Wall.png">
+      <Filter>Resource Files\Texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>
