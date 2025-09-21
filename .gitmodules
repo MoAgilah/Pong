@@ -1,0 +1,3 @@
+[submodule "SFMLEngine"]
+	path = SFMLEngine
+	url = https://github.com/MoAgilah/SFMLEngine
