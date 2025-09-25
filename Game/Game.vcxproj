@@ -187,6 +187,14 @@
     <Image Include="Resources\Textures\Title.png" />
     <Image Include="Resources\Textures\Wall.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SFMLEngine\EngineInterface\EngineInterface.vcxproj">
+      <Project>{0bfb223a-c0af-49a4-9582-a690efb0921b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\SFMLEngine\EngineSFMLBackEnd\EngineSFMLBackEnd.vcxproj">
+      <Project>{acc466dc-f0ab-4e8f-88e4-4859fabba6e3}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
