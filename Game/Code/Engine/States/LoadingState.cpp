@@ -11,7 +11,7 @@ void LoadResources()
 
 	scene->AddObjects();
 	scene->AddEnemies();
-	scene->AddForeGroundSprites();
+	scene->AddForeGroundObjects();
 	scene->AddGUI();
 
 	std::this_thread::sleep_for(std::chrono::seconds(3));

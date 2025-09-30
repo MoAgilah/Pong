@@ -12,9 +12,6 @@ public:
 
 	void Update(float deltaTime) override;
 
-	void Move(float x, float y) final;
-	void Move(const Vector2f& mov) final;
-
 	bool Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast) override;
 
 	void OnCollisionEnter(IGameObject* obj) override;

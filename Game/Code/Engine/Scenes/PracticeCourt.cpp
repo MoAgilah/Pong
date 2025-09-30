@@ -91,20 +91,24 @@ void PracticeCourt::AddObjects()
 	switch (GameMode::s_player1)
 	{
 	case Player1:
-		m_objects.emplace("SideWall", std::make_shared<Wall>(NSetVerticalWall(Vector2f(GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f), GameConstants::ScreenDim.x / 2.f))));
+		m_objects.emplace("SideWall", std::make_shared<Wall>(SetVerticalWall(Vector2f(GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f), GameConstants::ScreenDim.x / 2.f))));
 		break;
 	case Player2:
-		m_objects.emplace("SideWall", std::make_shared<Wall>(NSetVerticalWall(Vector2f(DifficultyMode::wallThickness / 2.f, GameConstants::ScreenDim.x / 2.f))));
+		m_objects.emplace("SideWall", std::make_shared<Wall>(SetVerticalWall(Vector2f(DifficultyMode::wallThickness / 2.f, GameConstants::ScreenDim.x / 2.f))));
 		break;
 	}
 
 	m_ballPhysics.SetCurrentBall(static_cast<Ball*>(GetObjectByName("Ball")));
 }
 
-void PracticeCourt::AddForeGroundSprites()
+void PracticeCourt::AddForeGroundObjects()
 {
-	m_objects.emplace("TopWall", std::make_shared<Wall>(NSetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, DifficultyMode::wallThickness * 2.f))));
-	m_objects.emplace("BottomWall", std::make_shared<Wall>(NSetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f)))));
+	m_objects.emplace("TopWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, DifficultyMode::wallThickness * 2.f))));
+	m_objects.emplace("BottomWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f)))));
+}
+
+void PracticeCourt::SpawnGameObjectAt(const std::string& id, std::shared_ptr<GameObject> obj, const Vector2f& pos)
+{
 }
 
 void PracticeCourt::AddGUI()

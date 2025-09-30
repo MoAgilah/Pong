@@ -123,10 +123,15 @@ void GameCourt::AddObjects()
 	m_ballPhysics.SetCurrentBall(dynamic_cast<Ball*>(GetObjectByName("Ball")));
 }
 
-void GameCourt::AddForeGroundSprites()
+void GameCourt::AddForeGroundObjects()
 {
-	m_objects.emplace("TopWall", std::make_shared<Wall>(NSetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, DifficultyMode::wallThickness / 2.f))));
-	m_objects.emplace("BottomWall", std::make_shared<Wall>(NSetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f)))));
+	m_objects.emplace("TopWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, DifficultyMode::wallThickness / 2.f))));
+	m_objects.emplace("BottomWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f)))));
+}
+
+void GameCourt::SpawnGameObjectAt(const std::string& id, std::shared_ptr<GameObject> obj, const Vector2f& pos)
+{
+
 }
 
 void GameCourt::UpdateGUI(float deltaTime)

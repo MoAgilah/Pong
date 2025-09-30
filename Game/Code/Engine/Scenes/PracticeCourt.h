@@ -18,7 +18,9 @@ public:
 	void AddGUI() final;
 	void AddEnemies() final;
 	void AddObjects() final;
-	void AddForeGroundSprites() final;
+	void AddForeGroundObjects() final;
+
+	void SpawnGameObjectAt(const std::string& id, std::shared_ptr<GameObject> obj, const Vector2f& pos) final;
 
 private:
 

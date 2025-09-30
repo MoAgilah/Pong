@@ -19,9 +19,9 @@ struct WallConfig
 	WallOrientation m_orientation;
 };
 
-WallConfig NSetHorizontalWall(const Vector2f& pos);
+WallConfig SetHorizontalWall(const Vector2f& pos);
 
-WallConfig NSetVerticalWall(const Vector2f& pos);
+WallConfig SetVerticalWall(const Vector2f& pos);
 
 class Wall : public GameObject
 {

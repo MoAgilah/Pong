@@ -51,22 +51,6 @@ void Ball::Update(float deltaTime)
 	}
 }
 
-void Ball::Move(float x, float y)
-{
-	auto spr = dynamic_cast<SFSprite*>(m_drawable.get());
-	if (spr)
-		spr->Move(x, y);
-
-	auto circle = dynamic_cast<BoundingCircle<SFCircle>*>(m_volume.get());
-	if (circle)
-		circle->Update(GetPosition());
-}
-
-void Ball::Move(const Vector2f& mov)
-{
-	Move(mov.x, mov.y);
-}
-
 bool Ball::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
 	bool col = false;

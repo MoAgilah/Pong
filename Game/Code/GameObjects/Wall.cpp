@@ -7,7 +7,7 @@
 #include <Engine/Core/Constants.h>
 #include <Engine/Core/GameManager.h>
 
-WallConfig NSetHorizontalWall(const Vector2f& pos)
+WallConfig SetHorizontalWall(const Vector2f& pos)
 {
 	WallConfig wc;
 	wc.m_texID = "Wall";
@@ -18,7 +18,7 @@ WallConfig NSetHorizontalWall(const Vector2f& pos)
 	return wc;
 }
 
-WallConfig NSetVerticalWall(const Vector2f& pos)
+WallConfig SetVerticalWall(const Vector2f& pos)
 {
 	WallConfig wc;
 	wc.m_texID = "SideWall";

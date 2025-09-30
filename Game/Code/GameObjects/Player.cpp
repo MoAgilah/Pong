@@ -83,22 +83,6 @@ void Player::Update(float deltaTime)
 	}
 }
 
-void Player::Move(float x, float y)
-{
-	auto spr = dynamic_cast<SFSprite*>(m_drawable.get());
-	if (spr)
-		spr->Move(x, y);
-
-	auto capsule = dynamic_cast<BoundingCapsule<SFCapsule>*>(m_volume.get());
-	if (capsule)
-		capsule->Update(GetPosition());
-}
-
-void Player::Move(const Vector2f& mov)
-{
-	Move(mov.x, mov.y);
-}
-
 bool Player::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
 	bool col = false;
