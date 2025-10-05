@@ -3,6 +3,7 @@
 #include "../../GameObjects/Player.h"
 #include "../../Utilities/GameMode.h"
 #include <Engine/Core/GameManager.h>
+#include <Utilities/Utils.h>
 #include <format>
 
 ScoreBoard::ScoreBoard(const Vector2f& center)
@@ -21,6 +22,7 @@ ScoreBoard::ScoreBoard(const Vector2f& center)
 void ScoreBoard::Place(PlayerIdentifiers playerID, int charSize, const Vector2f& pos)
 {
 	auto& currentScore = m_playersScoreText[playerID];
+	ENSURE_VALID(currentScore);
 
 	TextConfig config;
 	config.m_position = pos;
@@ -78,12 +80,20 @@ void ScoreBoard::Update(float deltaTime)
 	else
 	{
 		for (size_t i = 0; i < PlayerIdentifiers::MaxPlayers; i++)
+		{
+			CONTINUE_IF_INVALID(m_playersScoreText[i]);
 			m_playersScoreText[i]->SetText(std::to_string(m_playersScore[i]));
+		}
 	}
 }
 
 void ScoreBoard::Render(IRenderer* renderer)
 {
+	ENSURE_VALID(renderer);
+
 	for (auto& psText : m_playersScoreText)
+	{
+		CONTINUE_IF_INVALID(psText);
 		psText->Render(renderer);
+	}
 }

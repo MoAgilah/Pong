@@ -2,12 +2,13 @@
 
 #include "MainMenuState.h"
 #include <Engine/Core/Constants.h>
+#include <Utilities/Utils.h>
 #include <thread>
 
 void LoadResources()
 {
-	auto gameMgr = GameManager::Get();
-	auto scene = gameMgr->GetScene();
+	GET_OR_RETURN(gameMgr, GameManager::Get());
+	GET_OR_RETURN(scene, gameMgr->GetScene());
 
 	scene->AddObjects();
 	scene->AddEnemies();
@@ -51,6 +52,8 @@ void LoadingState::ProcessInputs()
 
 void LoadingState::Update(float deltaTime)
 {
+	ENSURE_VALID(m_gameMgr);
+
 	ProcessInputs();
 
 	m_loadingMessage.Update(deltaTime);
@@ -61,7 +64,8 @@ void LoadingState::Update(float deltaTime)
 
 void LoadingState::Render()
 {
-	auto renderer = m_gameMgr->GetRenderer();
+	ENSURE_VALID(m_gameMgr);
+	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_backgroundSpr.Render(renderer);
 	m_gamenameMessage.Render(renderer);

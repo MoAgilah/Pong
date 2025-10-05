@@ -6,6 +6,7 @@
 #include <Engine/Collisions/BoundingBox.h>
 #include <Engine/Core/Constants.h>
 #include <Engine/Core/GameManager.h>
+#include <Utilities/Utils.h>
 
 WallConfig SetHorizontalWall(const Vector2f& pos)
 {
@@ -38,24 +39,31 @@ Wall::Wall(const WallConfig& config)
 
 	SetScale(config.m_scale);
 
+	ENSURE_VALID(m_volume);
 	m_volume->Update(GetPosition());
 }
 
 void Wall::Update(float deltaTime)
 {
-	GameManager::Get()->GetCollisionMgr()->ProcessCollisions(this);
+	GET_OR_RETURN(gameMgr, GameManager::Get());
+	GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+
+	colMgr->ProcessCollisions(this);
 }
 
 void Wall::OnCollisionEnter(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
 }
 
 void Wall::OnCollisionStay(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
 }
 
 void Wall::OnCollisionExit(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
 }
 
 void Wall::ResolveCollisions(float time, const Vector2f& sepVec, float relHitPos)

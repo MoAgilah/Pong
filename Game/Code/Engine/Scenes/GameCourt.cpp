@@ -8,26 +8,23 @@
 #include "../../Engine/Core/PongFramework.h"
 #include <Drawables/SFSprite.h>
 #include <Engine/Core/GameManager.h>
+#include <Utilities/Utils.h>
 
 GameCourt::GameCourt()
 {
 	m_backgroundSpr = std::make_shared<SFSprite>("Court");
-	auto bkgSpr = dynamic_cast<SFSprite*>(m_backgroundSpr.get());
-	if (bkgSpr)
-	{
-		bkgSpr->SetScale(GameConstants::Scale);
-		bkgSpr->SetOrigin(GameConstants::ScreenDim / 2.f);
-		bkgSpr->SetPosition(GameConstants::ScreenDim / 2.f);
-	}
+	GET_OR_RETURN(bkgSpr, dynamic_cast<SFSprite*>(m_backgroundSpr.get()));
+
+	bkgSpr->SetScale(GameConstants::Scale);
+	bkgSpr->SetOrigin(GameConstants::ScreenDim / 2.f);
+	bkgSpr->SetPosition(GameConstants::ScreenDim / 2.f);
 }
 
 void GameCourt::Update(float deltaTime)
 {
 	UpdateGUI(deltaTime);
 
-	auto ball = static_cast<Ball*>(GetObjectByName("Ball"));
-	if (!ball)
-		return;
+	GET_OR_RETURN(ball, dynamic_cast<Ball*>(GetObjectByName("Ball")));
 
 	if (m_matchCtrl.IsReady() && !m_matchCtrl.IsOver())
 	{
@@ -35,28 +32,30 @@ void GameCourt::Update(float deltaTime)
 
 		for (auto& [name, object] : m_objects)
 		{
+			CONTINUE_IF_INVALID(object);
+
 			if (!object->GetActive())
 				continue;
 
 			if (name.ends_with("Player"))
 			{
-				if (Player* ply = dynamic_cast<Player*>(object.get()))
-				{
-					m_matchCtrl.SetCurrentMatchResults(ply->GetPlayerID());
-					if (AutomatedPlayer* aiPly = dynamic_cast<AutomatedPlayer*>(ply))
-					{
-						aiPly->UpdateFatigue(ball->GetRallieCount());
-						auto id = aiPly->GetPlayerID();
-						aiPly->UpdateStress(m_matchCtrl.GetPlayerScore(id), m_matchCtrl.GetPlayerScore(GameMode::GetOpposite(id)));
+				GET_OR_RETURN(ply, dynamic_cast<Player*>(object.get()));
 
-					}
-				}
+				m_matchCtrl.SetCurrentMatchResults(ply->GetPlayerID());
+
+				GET_OR_CONTINUE(aiPly, dynamic_cast<AutomatedPlayer*>(ply));
+
+				aiPly->UpdateFatigue(ball->GetRallieCount());
+				auto id = aiPly->GetPlayerID();
+				aiPly->UpdateStress(m_matchCtrl.GetPlayerScore(id), m_matchCtrl.GetPlayerScore(GameMode::GetOpposite(id)));
 			}
 
 			object->Update(deltaTime);
 		}
 
-		auto camera = GameManager::Get()->GetCamera();
+		GET_OR_RETURN(gameMgr, GameManager::Get());
+		GET_OR_RETURN(camera, gameMgr->GetCamera());
+
 		if (GameMode::s_type == vsWall)
 			m_matchCtrl.SetPlayerScore(Player1, ball->GetRallieCount());
 
@@ -75,6 +74,7 @@ void GameCourt::Update(float deltaTime)
 
 			for (auto& [_, object] : m_objects)
 			{
+				CONTINUE_IF_INVALID(object);
 				object->Reset();
 			}
 		}
@@ -141,5 +141,7 @@ void GameCourt::UpdateGUI(float deltaTime)
 
 void GameCourt::RenderGUI(IRenderer* renderer)
 {
+	ENSURE_VALID(renderer);
+
 	m_matchCtrl.Render(renderer);
 }

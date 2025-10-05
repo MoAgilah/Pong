@@ -21,5 +21,5 @@ public:
 
 private:
 
-	std::shared_ptr<Ball> m_ply;
+	std::shared_ptr<Ball> m_ball;
 };

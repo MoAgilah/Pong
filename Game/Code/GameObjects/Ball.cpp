@@ -7,6 +7,7 @@
 #include <Drawables/SFSprite.h>
 #include <Engine/Core/GameManager.h>
 #include <Engine/Collisions/BoundingCircle.h>
+#include <Utilities/Utils.h>
 #include <algorithm>
 #include <numbers>
 #include <random>
@@ -30,7 +31,7 @@ Ball::Ball(const Vector2f& startingPos)
 	SetInitialDirection(GetXVelocity() > 0);
 	SetDirection(GetInitialDirection());
 
-	auto circle = dynamic_cast<BoundingCircle<SFCircle>*>(m_volume.get());
+	GET_OR_RETURN(circle, dynamic_cast<BoundingCircle<SFCircle>*>(m_volume.get()));
 	circle->Update(GetPosition());
 
 	float radius = circle->GetRadius();
@@ -46,28 +47,30 @@ void Ball::Update(float deltaTime)
 
 	if (GetVelocity() != Vector2f(0, 0))
 	{
-		GameManager::Get()->GetCollisionMgr()->ProcessCollisions(this);
+		GET_OR_RETURN(gameMgr, GameManager::Get());
+		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+		colMgr->ProcessCollisions(this);
 		Move(GetVelocity() * GameConstants::FPS * deltaTime);
 	}
 }
 
 bool Ball::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
+	ENSURE_VALID(obj);
+
 	bool col = false;
 	if (DynamicGameObject::Intersects(obj, tFirst, tLast))
 	{
-		if (Player* ply = dynamic_cast<Player*>(obj))
+		GET_OR_RETURN(ply, dynamic_cast<Player*>(obj));
+		if (m_collidedWithPaddle)
 		{
-			if (m_collidedWithPaddle)
-			{
-				OnCollisionStay(obj);
-				obj->OnCollisionStay(this);
-			}
-			else
-			{
-				OnCollisionEnter(obj);
-				obj->OnCollisionEnter(this);
-			}
+			OnCollisionStay(obj);
+			ply->OnCollisionStay(this);
+		}
+		else
+		{
+			OnCollisionEnter(obj);
+			ply->OnCollisionEnter(this);
 		}
 
 		col = true;
@@ -88,17 +91,23 @@ bool Ball::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 
 void Ball::OnCollisionEnter(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
+
 	m_collidedWithPaddle = true;
 	m_rallieEnabled = true;
 }
 
 void Ball::OnCollisionStay(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
+
 	m_rallieEnabled = false;
 }
 
 void Ball::OnCollisionExit(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
+
 	m_collidedWithPaddle = false;
 }
 
@@ -114,6 +123,8 @@ void Ball::ResolveCollisions(float time, const Vector2f& sepVec, float relHitPos
 	position += sepVec;
 
 	SetPosition(position);
+
+	ENSURE_VALID(m_volume);
 	m_volume->Update(position);
 
 	// Step 3: Normalize the collision normal (if applicable)
@@ -172,6 +183,8 @@ void Ball::Reset()
 	SetActive(false);
 	SetDirection(!GetDirection());
 	SetPosition(GetInitialPosition());
+
+	ENSURE_VALID(m_volume);
 	m_volume->Update(Vector2f(GetPosition().x, GetPosition().y + 3.5f));
 	SetVelocity(Vector2f(DifficultyMode::paddleSpeed * -1, 0));
 	ResetRallieCount();

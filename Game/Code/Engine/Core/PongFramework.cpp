@@ -4,6 +4,7 @@
 #include "../States/TitleState.h"
 #include "../States/DebugState.h"
 #include "../../Utilities/DifficultyMode.h"
+#include <Utilities/Utils.h>
 
 PongFramework::PongFramework()
 {
@@ -22,7 +23,8 @@ void PongFramework::Initialise()
 	m_gameMgr.GetSoundMgr().AddMusic("../Game/Resources/Music/");
 	m_gameMgr.GetTextureMgr().AddTextures("../Game/Resources/Textures/");
 
-	m_gameMgr.GetRenderer()->Initialise(GameConstants::ScreenDim, GameConstants::WindowTitle);
+	GET_OR_RETURN(renderer, m_gameMgr.GetRenderer())
+	renderer->Initialise(GameConstants::ScreenDim, GameConstants::WindowTitle);
 	m_gameMgr.SetICollisionManager(std::make_shared<PongCollisionManager>());
 
 	m_gameMgr.GetGameStateMgr()->ChangeState(new TitleState(&m_gameMgr));

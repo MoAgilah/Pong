@@ -25,5 +25,4 @@ private:
 
 	SFMenu m_menu;
 	SFSprite m_backgroundSpr;
-	GameManager* m_gameMgr;
 };

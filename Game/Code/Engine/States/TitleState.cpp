@@ -2,6 +2,7 @@
 
 #include "MainMenuState.h"
 #include <Engine/Core/Constants.h>
+#include <Utilities/Utils.h>
 
 TitleState::TitleState(GameManager* gameMgr)
 	: IGameState(gameMgr),
@@ -30,7 +31,10 @@ void TitleState::Resume()
 
 void TitleState::ProcessInputs()
 {
-	if (m_gameMgr->GetInputManager()->IsAnyKeyPressed())
+	ENSURE_VALID(m_gameMgr);
+	GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
+
+	if (inputMgr->IsAnyKeyPressed())
 		m_gameMgr->GetGameStateMgr()->ChangeState(new MainMenuState(m_gameMgr));
 }
 
@@ -43,7 +47,8 @@ void TitleState::Update(float deltaTime)
 
 void TitleState::Render()
 {
-	auto renderer = m_gameMgr->GetRenderer();
+	ENSURE_VALID(m_gameMgr);
+	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_backgroundSpr.Render(renderer);
 	m_gamenameMessage.Render(renderer);

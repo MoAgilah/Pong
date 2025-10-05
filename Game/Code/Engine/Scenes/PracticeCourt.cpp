@@ -8,26 +8,23 @@
 #include "../../Engine/Core/PongFramework.h"
 #include <Drawables/SFSprite.h>
 #include <Engine/Core/GameManager.h>
+#include <Utilities/Utils.h>
 
 PracticeCourt::PracticeCourt()
 {
 	m_backgroundSpr = std::make_shared<SFSprite>("Court");
-	auto bkgSpr = dynamic_cast<SFSprite*>(m_backgroundSpr.get());
-	if (bkgSpr)
-	{
-		bkgSpr->SetScale(GameConstants::Scale);
-		bkgSpr->SetOrigin(GameConstants::ScreenDim / 2.f);
-		bkgSpr->SetPosition(GameConstants::ScreenDim / 2.f);
-	}
+	GET_OR_RETURN(bkgSpr, dynamic_cast<SFSprite*>(m_backgroundSpr.get()));
+
+	bkgSpr->SetScale(GameConstants::Scale);
+	bkgSpr->SetOrigin(GameConstants::ScreenDim / 2.f);
+	bkgSpr->SetPosition(GameConstants::ScreenDim / 2.f);
 }
 
 void PracticeCourt::Update(float deltaTime)
 {
 	UpdateGUI(deltaTime);
 
-	auto ball = static_cast<Ball*>(GetObjectByName("Ball"));
-	if (!ball)
-		return;
+	GET_OR_RETURN(ball, dynamic_cast<Ball*>(GetObjectByName("Ball")));
 
 	if (m_matchCtrl.IsReady())
 	{
@@ -35,15 +32,19 @@ void PracticeCourt::Update(float deltaTime)
 
 		for (auto& [name, object] : m_objects)
 		{
+			CONTINUE_IF_INVALID(object);
+
 			if (!object->GetActive())
 				continue;
 
 			object->Update(deltaTime);
 		}
 
-		auto camera = GameManager::Get()->GetCamera();
 		if (GameMode::s_type == vsWall)
 			m_matchCtrl.SetPlayerScore(Player1, ball->GetRallieCount());
+
+		GET_OR_RETURN(gameMgr, GameManager::Get());
+		GET_OR_RETURN(camera, gameMgr->GetCamera());
 
 		if (!camera->IsInView(ball->GetVolume()))
 		{
@@ -67,6 +68,8 @@ void PracticeCourt::Update(float deltaTime)
 
 			for (auto& [_, object] : m_objects)
 			{
+				CONTINUE_IF_INVALID(object);
+
 				object->Reset();
 			}
 		}
@@ -88,6 +91,7 @@ void PracticeCourt::AddObjects()
 	m_objects.emplace("Ball", std::make_shared<Ball>(Vector2f(GameConstants::ScreenDim / 2.0f)));
 
 	m_objects.emplace("FirstPlayer", std::make_shared<Player>(GameMode::s_player1));
+
 	switch (GameMode::s_player1)
 	{
 	case Player1:
@@ -128,5 +132,7 @@ void PracticeCourt::UpdateGUI(float deltaTime)
 
 void PracticeCourt::RenderGUI(IRenderer* renderer)
 {
+	ENSURE_VALID(renderer);
+
 	m_matchCtrl.Render(renderer);
 }

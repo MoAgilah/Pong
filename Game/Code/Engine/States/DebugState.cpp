@@ -3,6 +3,7 @@
 #include "../../Utilities/DifficultyMode.h"
 #include "../../Utilities/GameMode.h"
 #include <Engine/Core/Constants.h>
+#include <Utilities/Utils.h>
 #include <iostream>
 
 DebugState::DebugState(GameManager* gameMgr)
@@ -11,7 +12,8 @@ DebugState::DebugState(GameManager* gameMgr)
 
 void DebugState::Initialise()
 {
-	m_ply = std::make_shared<Ball>(GameConstants::ScreenDim*0.5f);
+	m_ball = std::make_shared<Ball>(GameConstants::ScreenDim * 0.5f);
+	ENSURE_VALID(m_ball);
 }
 
 void DebugState::Pause()
@@ -28,7 +30,8 @@ void DebugState::ProcessInputs()
 
 void DebugState::Update(float deltaTime)
 {
-    m_ply->Update(deltaTime);
+	ENSURE_VALID(m_ball);
+    m_ball->Update(deltaTime);
 }
 
 

@@ -10,6 +10,7 @@
 #include <Drawables/SFShape.h>
 #include <Engine/Collisions/BoundingCapsule.h>
 #include <Engine/Core/GameManager.h>
+#include <Utilities/Utils.h>
 #include <ranges>
 
 int Player::s_playerNum = -1;
@@ -63,7 +64,7 @@ Player::Player(PlayerIdentifiers plyID)
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
 
-	auto capsule = dynamic_cast<BoundingCapsule<SFCapsule>*>(m_volume.get());
+	GET_OR_RETURN(capsule, dynamic_cast<BoundingCapsule<SFCapsule>*>(m_volume.get()));
 	capsule->Update(GetPosition());
 
 	float radius = capsule->GetRadius();
@@ -78,28 +79,32 @@ void Player::Update(float deltaTime)
 
 	if (GetYVelocity() != 0)
 	{
+		GET_OR_RETURN(gameMgr, GameManager::Get());
+		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+
 		Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);
-		GameManager::Get()->GetCollisionMgr()->ProcessCollisions(this);
+		colMgr->ProcessCollisions(this);
 	}
 }
 
 bool Player::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
+	ENSURE_VALID(obj);
+
 	bool col = false;
 	if (DynamicGameObject::Intersects(obj, tFirst, tLast))
 	{
-		if (Ball* ball = dynamic_cast<Ball*>(obj))
+		GET_OR_RETURN(ball, dynamic_cast<Ball*>(obj));
+
+		if (m_collidedWithBall)
 		{
-			if (m_collidedWithBall)
-			{
-				OnCollisionStay(obj);
-				obj->OnCollisionStay(this);
-			}
-			else
-			{
-				OnCollisionEnter(obj);
-				obj->OnCollisionEnter(this);
-			}
+			OnCollisionStay(ball);
+			ball->OnCollisionStay(this);
+		}
+		else
+		{
+			OnCollisionEnter(ball);
+			ball->OnCollisionEnter(this);
 		}
 
 		col = true;
@@ -120,15 +125,20 @@ bool Player::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 
 void Player::OnCollisionEnter(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
+
 	SetCollisionWithBall(true);
 }
 
 void Player::OnCollisionStay(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
 }
 
 void Player::OnCollisionExit(IGameObject* obj)
 {
+	ENSURE_VALID(obj);
+
 	SetCollisionWithBall(false);
 }
 
@@ -143,6 +153,9 @@ void Player::ResolveCollisions(float time, const Vector2f& sepVec, float relHitP
 
 		Vector2f collisionPos = pos + impactOffset;
 		SetPosition(collisionPos.x, collisionPos.y);
+
+		ENSURE_VALID(m_volume);
+
 		m_volume->Update(collisionPos);
 
 		// Step 2: Apply minimum translation vector to separate
@@ -174,8 +187,8 @@ void Player::Reset()
 
 void Player::ProcessInput()
 {
-	auto gameMgr = GameManager::Get();
-	auto inputManager = gameMgr->GetInputManager();
+	GET_OR_RETURN(gameMgr, GameManager::Get());
+	GET_OR_RETURN(inputManager, gameMgr->GetInputManager());
 
 	if (inputManager->GetKeyState((int)m_keys[Keys::MoveUpKey]))
 		SetYVelocity(-m_paddleSpeed);
@@ -213,8 +226,8 @@ void Player::ProcessInput()
 		m_hasAppliedShot = true;
 	}
 
-	/*if (inputManager->GetKeyState((int)KeyCode::Space))
-		gameMgr->GetGameStateMgr()->PushState(new PauseMenuState(gameMgr));*/
+	if (inputManager->GetKeyState((int)KeyCode::Space))
+		gameMgr->GetGameStateMgr()->PushState(new PauseMenuState(gameMgr));
 }
 
 AutomatedPlayer::AutomatedPlayer(PlayerIdentifiers plyID)
@@ -241,9 +254,8 @@ void AutomatedPlayer::Update(float deltaTime)
 {
 	m_opponent = GetOpponent();
 
-	auto scene = GameManager::Get()->GetScene();
-	if (!scene)
-		return;
+	GET_OR_RETURN(gameMgr, GameManager::Get());
+	GET_OR_RETURN(scene, gameMgr->GetScene());
 
 	const Vector2f& ballVel = BallPhysics::GetVelocity();
 
@@ -283,6 +295,8 @@ void AutomatedPlayer::UpdateStress(int myScore, int oppScore)
 
 bool AutomatedPlayer::Intersects(IGameObject* obj)
 {
+	ENSURE_VALID_RET(obj, false);
+
 	return false;
 }
 
@@ -301,12 +315,15 @@ bool AutomatedPlayer::ShouldReactToBall(const Vector2f& ballVel)
 
 Player* AutomatedPlayer::GetOpponent()
 {
+	GET_OR_RETURN(gameMgr, GameManager::Get());
+	GET_OR_RETURN(scene, gameMgr->GetScene());
+
 	switch (GetPlayerID())
 	{
 	case Player1:
-		return static_cast<Player*>(GameManager::Get()->GetScene()->GetObjectByName("SecondPlayer"));
+		return static_cast<Player*>(scene->GetObjectByName("SecondPlayer"));
 	case Player2:
-		return static_cast<Player*>(GameManager::Get()->GetScene()->GetObjectByName("FirstPlayer"));
+		return static_cast<Player*>(scene->GetObjectByName("FirstPlayer"));
 	}
 
 	return nullptr;
@@ -336,6 +353,8 @@ float AutomatedPlayer::StandardShot()
 
 float AutomatedPlayer::AggressiveShot()
 {
+	ENSURE_VALID(m_opponent);
+
 	float oppY = m_opponent->GetPosition().y;
 	float screenCenter = GameConstants::ScreenDim.y / 2.0f;
 
@@ -362,6 +381,8 @@ float AutomatedPlayer::AggressiveShot()
 
 float AutomatedPlayer::DefensiveShot()
 {
+	ENSURE_VALID(m_opponent);
+
 	float ballSpeed = std::abs(BallPhysics::GetVelocity().x);
 	float oppY = m_opponent->GetPosition().y;
 
@@ -483,6 +504,8 @@ float AutomatedPlayer::FakeShot(int playstyle)
 
 float AutomatedPlayer::CornerShot()
 {
+	ENSURE_VALID(m_opponent);
+
 	float oppY = m_opponent->GetPosition().y;
 
 	float targetY = (oppY < GameConstants::ScreenDim.y / 2.0f) ?
@@ -497,6 +520,8 @@ float AutomatedPlayer::CornerShot()
 
 float AutomatedPlayer::WallShot()
 {
+	ENSURE_VALID(m_opponent);
+
 	const auto& ballPos = BallPhysics::GetPosition();
 	const auto& ballVel = BallPhysics::GetVelocity();
 
@@ -644,7 +669,11 @@ void AutomatedPlayer::UpdateMovement(const Vector2f& paddlePos, float deltaTime)
 		float newVelocity = GetYVelocity() + std::copysign(speedAdjustment, diff);
 		newVelocity = std::clamp(newVelocity, -maxSpeed, maxSpeed);
 		SetYVelocity(newVelocity);
-		GameManager::Get()->GetCollisionMgr()->ProcessCollisions(this);
+
+		GET_OR_RETURN(gameMgr, GameManager::Get());
+		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+
+		colMgr->ProcessCollisions(this);
 		Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);
 	}
 	else
