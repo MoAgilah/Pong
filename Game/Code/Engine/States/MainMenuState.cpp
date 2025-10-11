@@ -66,7 +66,7 @@ void MainMenuState::Update(float deltaTime)
 void MainMenuState::Render()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
+	DECL_GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_backgroundSpr.Render(renderer);
 	m_gamenameMessage.Render(renderer);
@@ -76,7 +76,7 @@ void MainMenuState::Render()
 void MainMenuState::PerformMenuActions()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
+	DECL_GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
 
 	if (inputMgr->GetKeyState((int)KeyCode::Enter))
 	{
@@ -109,8 +109,8 @@ void MainMenuState::PerformMenuActions()
 
 void MainMenuState::PerformInitialMenuActions()
 {
-	GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
-	GET_OR_RETURN(menuNav, menu->GetMenuNav());
+	DECL_GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
+	DECL_GET_OR_RETURN(menuNav, menu->GetMenuNav());
 
 	auto val = menuNav->GetCurrCursorPos();
 	switch (menuNav->GetCurrCursorPos())
@@ -138,9 +138,9 @@ void MainMenuState::PerformInitialMenuActions()
 
 void MainMenuState::ChooseSide(PlayerIdentifiers id)
 {
-	GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
-	GET_OR_RETURN(cursor, menu->GetCursor(id));
-	GET_OR_RETURN(menuNav, cursor->GetMenuNav());
+	DECL_GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
+	DECL_GET_OR_RETURN(cursor, menu->GetCursor(id));
+	DECL_GET_OR_RETURN(menuNav, cursor->GetMenuNav());
 
 	auto val = menuNav->GetCurrCursorPos();
 	switch (menuNav->GetCurrCursorPos())
@@ -207,12 +207,10 @@ void MainMenuState::Perform2PlayerSideMenuActions()
 
 void MainMenuState::PerformDifficultyMenuActions()
 {
-	GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
-	GET_OR_RETURN(menuNav, menu->GetMenuNav());
+	DECL_GET_OR_RETURN(menu, m_menu.GetCurrentMenu());
+	DECL_GET_OR_RETURN(menuNav, menu->GetMenuNav());
 
 	bool ready = false;
-
-	auto menu = m_menu.GetCurrentMenu();
 
 	switch (menuNav->GetCurrCursorPos())
 	{
@@ -232,7 +230,7 @@ void MainMenuState::PerformDifficultyMenuActions()
 
 	if (ready)
 	{
-		GET_OR_RETURN(gameMgr, GameManager::Get());
+		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
 
 		if (GameMode::s_type != vsWall)
 			gameMgr->SetScene(std::make_shared<GameCourt>());
@@ -245,42 +243,50 @@ void MainMenuState::PerformDifficultyMenuActions()
 
 void MainMenuState::AddInitialMenu(const Vector2f& menuSize, const MenuPositionData& posData, TextConfig& config)
 {
-	GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 1,4 }, posData)));
+	DECL_GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 1,4 }, posData)));
 
 	auto cellSize = menu->GetCellSize();
 
-	GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
+	DECL_GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
 	config.m_charSize = (int)(cellSize.y * 0.6f);
 	config.m_position = cell->GetPosition();
 
-	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Player vs. A.I.");
+	DECL_GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
+	DECL_GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Player vs. A.I.");
+
 	cell->SetMenuSlotNumber(0);
 
 	GET_OR_RETURN(cell, menu->GetCell({ 1, 0 }));
 	config.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Player vs. Player");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Player vs.Player");
+
 	cell->SetMenuSlotNumber(1);
 
 	GET_OR_RETURN(cell, menu->GetCell({ 2, 0 }));
 	config.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "A.I vs. A.I");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("A.I vs. A.I");
+
 	cell->SetMenuSlotNumber(2);
 
 	GET_OR_RETURN(cell, menu->GetCell({ 3, 0 }));
 	config.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Player vs. Wall");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Player vs. Wall");
+
 	cell->SetMenuSlotNumber(3);
 
 	menu->SetActiveCells();
 
-	GET_OR_RETURN(menuNav, menu->GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, menu->GetMenuNav());
 
 	menuNav->SetCursorRange({ 0,1,2,3 });
 	menuNav->SetCurrCursorPos(0);
@@ -288,18 +294,17 @@ void MainMenuState::AddInitialMenu(const Vector2f& menuSize, const MenuPositionD
 
 void MainMenuState::Add1PlayerSideMenu(const Vector2f& menuSize, const MenuPositionData& posData, TextConfig& config)
 {
-	GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,2 }, posData)));
-	auto menu = m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,2 }, posData));
+	DECL_GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,2 }, posData)));
 
 	auto cellSize = menu->GetCellSize();
 
-	GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
+	DECL_GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
 
 	config.m_animType = TextAnimType::Static;
 	config.m_charSize = (int)(cellSize.y * 0.25f);
 	config.m_position = cell->GetPosition();
 
-	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFText>(config)));
+	DECL_GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFText>(config)));
 	text->SetText("Player 1");
 
 	GET_OR_RETURN(cell, menu->GetCell({ 0, 2 }));
@@ -321,10 +326,10 @@ void MainMenuState::Add1PlayerSideMenu(const Vector2f& menuSize, const MenuPosit
 	menu->SetActiveCells();
 
 	menu->AddCursor(new SFSprite("CtrlCursor"), MenuNav(KeyCode::Left, KeyCode::Right));
-	GET_OR_RETURN(cursor, menu->GetCursor(0));
+	DECL_GET_OR_RETURN(cursor, menu->GetCursor(0));
 	cursor->SetScale(cellSize);
 
-	GET_OR_RETURN(menuNav, cursor->GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, cursor->GetMenuNav());
 
 	menuNav->SetCursorRange({ 0,1,2 });
 	menuNav->SetCurrCursorPos(1);
@@ -332,17 +337,17 @@ void MainMenuState::Add1PlayerSideMenu(const Vector2f& menuSize, const MenuPosit
 
 void MainMenuState::Add2PlayerSideMenu(const Vector2f& menuSize, const MenuPositionData& posData, TextConfig& config)
 {
-	GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,3 }, posData)));
+	DECL_GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,3 }, posData)));
 
 	auto cellSize = menu->GetCellSize();
 
-	GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
+	DECL_GET_OR_RETURN(cell, menu->GetCell({ 0, 0 }));
 
 	config.m_animType = TextAnimType::Static;
 	config.m_charSize = (int)(cellSize.y * 0.375f);
 	config.m_position = cell->GetPosition();
 
-	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFText>(config)));
+	DECL_GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFText>(config)));
 	text->SetText("Player 1");
 
 	GET_OR_RETURN(cell, menu->GetCell({ 0, 2 }));
@@ -373,11 +378,11 @@ void MainMenuState::Add2PlayerSideMenu(const Vector2f& menuSize, const MenuPosit
 	menu->SetActiveCells();
 
 	menu->AddCursor(new SFSprite("CtrlCursor"), MenuNav(KeyCode::A, KeyCode::D));
-	GET_OR_RETURN(cursor, menu->GetCursor(0));
+	DECL_GET_OR_RETURN(cursor, menu->GetCursor(0));
 
 	cursor->SetScale(cellSize);
 
-	GET_OR_RETURN(menuNav, cursor->GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, cursor->GetMenuNav());
 
 	menuNav->SetCursorRange({ 0,1,2 });
 	menuNav->SetCurrCursorPos(1);
@@ -395,18 +400,19 @@ void MainMenuState::Add2PlayerSideMenu(const Vector2f& menuSize, const MenuPosit
 
 void MainMenuState::AddDifficultyMenu(const Vector2f& menuSize, const MenuPositionData& posData, TextConfig& config)
 {
-	GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,2 }, posData)));
+	DECL_GET_OR_RETURN(menu, m_menu.AddMenu(new SFMenu(menuSize, 2.f, { 3,2 }, posData)));
 
 	auto cellSize = menu->GetCellSize();
 
-	GET_OR_RETURN(cell, menu->GetCell({ 1, 0 }));
+	DECL_GET_OR_RETURN(cell, menu->GetCell({ 1, 0 }));
 
 	config.m_animType = TextAnimType::Flashing;
 	config.m_charSize = (int)(cellSize.y * 0.25f);
 	config.m_position = cell->GetPosition();
 
-	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), ("Easy"));
+	DECL_GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
+	DECL_GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Easy");
 
 	cell->SetMenuSlotNumber(0);
 
@@ -414,7 +420,8 @@ void MainMenuState::AddDifficultyMenu(const Vector2f& menuSize, const MenuPositi
 	config.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Medium");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Medium");
 
 	cell->SetMenuSlotNumber(1);
 
@@ -422,13 +429,14 @@ void MainMenuState::AddDifficultyMenu(const Vector2f& menuSize, const MenuPositi
 	config.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(config)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Hard");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Hard");
 
 	cell->SetMenuSlotNumber(2);
 
 	menu->SetActiveCells();
 
-	GET_OR_RETURN(menuNav, menu->GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, menu->GetMenuNav());
 
 	menuNav->ChangeNavKeys(KeyCode::Left, KeyCode::Right);
 	menuNav->SetCursorRange({ 0, 1, 2 });

@@ -17,7 +17,7 @@ std::random_device nrd;
 std::mt19937 ngen(nrd());
 std::bernoulli_distribution ncoinFlip(0.5f);  // 50/50 chance
 
-float NRandomOneOrMinusOne()
+static float NRandomOneOrMinusOne()
 {
 	return ncoinFlip(ngen) ? 1.0f : -1.0f;
 }
@@ -31,7 +31,7 @@ Ball::Ball(const Vector2f& startingPos)
 	SetInitialDirection(GetXVelocity() > 0);
 	SetDirection(GetInitialDirection());
 
-	GET_OR_RETURN(circle, dynamic_cast<BoundingCircle<SFCircle>*>(m_volume.get()));
+	DECL_GET_OR_RETURN(circle, dynamic_cast<BoundingCircle<SFCircle>*>(m_volume.get()));
 	circle->Update(GetPosition());
 
 	float radius = circle->GetRadius();
@@ -47,8 +47,8 @@ void Ball::Update(float deltaTime)
 
 	if (GetVelocity() != Vector2f(0, 0))
 	{
-		GET_OR_RETURN(gameMgr, GameManager::Get());
-		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+		DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
 		colMgr->ProcessCollisions(this);
 		Move(GetVelocity() * GameConstants::FPS * deltaTime);
 	}
@@ -56,12 +56,12 @@ void Ball::Update(float deltaTime)
 
 bool Ball::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
-	ENSURE_VALID(obj);
+	ENSURE_VALID_RET(obj, false);
 
 	bool col = false;
 	if (DynamicGameObject::Intersects(obj, tFirst, tLast))
 	{
-		GET_OR_RETURN(ply, dynamic_cast<Player*>(obj));
+		DECL_GET_ENSURE_VALID_RET(ply, dynamic_cast<Player*>(obj), false);
 		if (m_collidedWithPaddle)
 		{
 			OnCollisionStay(obj);

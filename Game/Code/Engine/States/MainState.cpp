@@ -27,7 +27,7 @@ void MainState::Resume()
 void MainState::ProcessInputs()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
+	DECL_GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
 
 	if (inputMgr->GetKeyState((int)KeyCode::Enter))
 		m_gameMgr->GetGameStateMgr()->PushState(new PauseMenuState(m_gameMgr));
@@ -39,14 +39,14 @@ void MainState::Update(float deltaTime)
 	m_gameMgr->GetTimer().Update(deltaTime);
 	m_gameMgr->CheckInView();
 
-	GET_OR_RETURN(scene, m_gameMgr->GetScene());
+	DECL_GET_OR_RETURN(scene, m_gameMgr->GetScene());
 	scene->Update(deltaTime);
 }
 
 void MainState::Render()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
+	DECL_GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_gameMgr->GetCamera()->Reset(renderer);
 	m_gameMgr->GetScene()->Render(renderer);

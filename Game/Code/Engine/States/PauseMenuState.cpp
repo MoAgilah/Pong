@@ -26,31 +26,37 @@ void PauseMenuState::Initialise()
 
 	auto cellSize = m_menu.GetCellSize();
 
-	GET_OR_RETURN(cell,m_menu.GetCell({ 0, 0 }));
+	DECL_GET_OR_RETURN(cell,m_menu.GetCell({ 0, 0 }));
 	textConfig.m_charSize = (int)(cellSize.y * 0.4f);
 	textConfig.m_position = cell->GetPosition();
 
-	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(textConfig)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text),"Resume Current Game");
+	DECL_GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(textConfig)));
+	DECL_GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Resume Current Game");
+
 	cell->SetMenuSlotNumber(0);
 
 	GET_OR_RETURN(cell, m_menu.GetCell({ 1, 0 }));
 	textConfig.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(textConfig)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Restart Current Game");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Restart Current Game");
+
 	cell->SetMenuSlotNumber(1);
 
 	GET_OR_RETURN(cell, m_menu.GetCell({ 2, 0 }));
 	textConfig.m_position = cell->GetPosition();
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(textConfig)));
-	InitFlashingText(dynamic_cast<SFAnimatedText*>(text), "Quit To Main Menu");
+	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
+	sfText->InitFlashingText("Quit To Main Menu");
+
 	cell->SetMenuSlotNumber(2);
 
 	m_menu.SetActiveCells();
 
-	GET_OR_RETURN(menuNav, m_menu.GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, m_menu.GetMenuNav());
 
 	menuNav->SetCursorRange({ 0,1,2 });
 	menuNav->SetCurrCursorPos(0);
@@ -67,7 +73,7 @@ void PauseMenuState::Resume()
 void PauseMenuState::ProcessInputs()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
+	DECL_GET_OR_RETURN(inputMgr, m_gameMgr->GetInputManager());
 
 	if (inputMgr->GetKeyState((int)KeyCode::Enter))
 		PerformMenuActions();
@@ -83,7 +89,7 @@ void PauseMenuState::Update(float deltaTime)
 void PauseMenuState::Render()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
+	DECL_GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_backgroundSpr.Render(renderer);
 
@@ -95,7 +101,7 @@ void PauseMenuState::PerformMenuActions()
 	ENSURE_VALID(m_gameMgr);
 	auto gameStateMgr = m_gameMgr->GetGameStateMgr();
 
-	GET_OR_RETURN(menuNav, m_menu.GetMenuNav());
+	DECL_GET_OR_RETURN(menuNav, m_menu.GetMenuNav());
 
 	switch (menuNav->GetCurrCursorPos())
 	{
@@ -103,9 +109,11 @@ void PauseMenuState::PerformMenuActions()
 		gameStateMgr->PopState();
 		break;
 	case Restart:
-		GET_OR_RETURN(scene, m_gameMgr->GetScene());
+	{
+		DECL_GET_OR_RETURN(scene, m_gameMgr->GetScene());
 		scene->ResetScene();
 		gameStateMgr->PopState();
+	}
 		break;
 	case ToMain:
 		gameStateMgr->ChangeState(new TitleState(m_gameMgr));

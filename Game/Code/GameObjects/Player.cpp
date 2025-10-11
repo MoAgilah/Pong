@@ -64,7 +64,7 @@ Player::Player(PlayerIdentifiers plyID)
 	SetDirection(GetInitialDirection());
 	SetPosition(GetInitialPosition());
 
-	GET_OR_RETURN(capsule, dynamic_cast<BoundingCapsule<SFCapsule>*>(m_volume.get()));
+	DECL_GET_OR_RETURN(capsule, dynamic_cast<BoundingCapsule<SFCapsule>*>(m_volume.get()));
 	capsule->Update(GetPosition());
 
 	float radius = capsule->GetRadius();
@@ -79,8 +79,8 @@ void Player::Update(float deltaTime)
 
 	if (GetYVelocity() != 0)
 	{
-		GET_OR_RETURN(gameMgr, GameManager::Get());
-		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+		DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
 
 		Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);
 		colMgr->ProcessCollisions(this);
@@ -89,12 +89,12 @@ void Player::Update(float deltaTime)
 
 bool Player::Intersects(IDynamicGameObject* obj, float& tFirst, float& tLast)
 {
-	ENSURE_VALID(obj);
+	ENSURE_VALID_RET(obj, false);
 
 	bool col = false;
 	if (DynamicGameObject::Intersects(obj, tFirst, tLast))
 	{
-		GET_OR_RETURN(ball, dynamic_cast<Ball*>(obj));
+		DECL_GET_ENSURE_VALID_RET(ball, dynamic_cast<Ball*>(obj), false);
 
 		if (m_collidedWithBall)
 		{
@@ -187,8 +187,8 @@ void Player::Reset()
 
 void Player::ProcessInput()
 {
-	GET_OR_RETURN(gameMgr, GameManager::Get());
-	GET_OR_RETURN(inputManager, gameMgr->GetInputManager());
+	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+	DECL_GET_OR_RETURN(inputManager, gameMgr->GetInputManager());
 
 	if (inputManager->GetKeyState((int)m_keys[Keys::MoveUpKey]))
 		SetYVelocity(-m_paddleSpeed);
@@ -254,8 +254,8 @@ void AutomatedPlayer::Update(float deltaTime)
 {
 	m_opponent = GetOpponent();
 
-	GET_OR_RETURN(gameMgr, GameManager::Get());
-	GET_OR_RETURN(scene, gameMgr->GetScene());
+	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+	DECL_GET_OR_RETURN(scene, gameMgr->GetScene());
 
 	const Vector2f& ballVel = BallPhysics::GetVelocity();
 
@@ -315,8 +315,8 @@ bool AutomatedPlayer::ShouldReactToBall(const Vector2f& ballVel)
 
 Player* AutomatedPlayer::GetOpponent()
 {
-	GET_OR_RETURN(gameMgr, GameManager::Get());
-	GET_OR_RETURN(scene, gameMgr->GetScene());
+	DECL_GET_ENSURE_VALID_RET(gameMgr, GameManager::Get(), nullptr);
+	DECL_GET_ENSURE_VALID_RET(scene, gameMgr->GetScene(), nullptr);
 
 	switch (GetPlayerID())
 	{
@@ -353,7 +353,7 @@ float AutomatedPlayer::StandardShot()
 
 float AutomatedPlayer::AggressiveShot()
 {
-	ENSURE_VALID(m_opponent);
+	ENSURE_VALID_RET(m_opponent, 0.0f);
 
 	float oppY = m_opponent->GetPosition().y;
 	float screenCenter = GameConstants::ScreenDim.y / 2.0f;
@@ -381,7 +381,7 @@ float AutomatedPlayer::AggressiveShot()
 
 float AutomatedPlayer::DefensiveShot()
 {
-	ENSURE_VALID(m_opponent);
+	ENSURE_VALID_RET(m_opponent, 0.0f);
 
 	float ballSpeed = std::abs(BallPhysics::GetVelocity().x);
 	float oppY = m_opponent->GetPosition().y;
@@ -504,7 +504,7 @@ float AutomatedPlayer::FakeShot(int playstyle)
 
 float AutomatedPlayer::CornerShot()
 {
-	ENSURE_VALID(m_opponent);
+	ENSURE_VALID_RET(m_opponent, 0.0f);
 
 	float oppY = m_opponent->GetPosition().y;
 
@@ -520,7 +520,7 @@ float AutomatedPlayer::CornerShot()
 
 float AutomatedPlayer::WallShot()
 {
-	ENSURE_VALID(m_opponent);
+	ENSURE_VALID_RET(m_opponent, 0.0f);
 
 	const auto& ballPos = BallPhysics::GetPosition();
 	const auto& ballVel = BallPhysics::GetVelocity();
@@ -670,8 +670,8 @@ void AutomatedPlayer::UpdateMovement(const Vector2f& paddlePos, float deltaTime)
 		newVelocity = std::clamp(newVelocity, -maxSpeed, maxSpeed);
 		SetYVelocity(newVelocity);
 
-		GET_OR_RETURN(gameMgr, GameManager::Get());
-		GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+		DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
 
 		colMgr->ProcessCollisions(this);
 		Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);

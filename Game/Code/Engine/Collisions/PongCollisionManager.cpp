@@ -20,13 +20,13 @@ void PongCollisionManager::DynamicObjectToObjectResolution(IDynamicGameObject* o
 
     if (Ball* ball = dynamic_cast<Ball*>(obj1))
     {
-        GET_OR_RETURN(wall, dynamic_cast<Wall*>(obj2));
+        DECL_GET_OR_RETURN(wall, dynamic_cast<Wall*>(obj2));
 
         if (!ball->RallyHasBegun())
         {
             if (wall->GetOrientation() == WallOrientation::Vertical)
             {
-                GET_OR_RETURN(drawable, wall->GetDrawable());
+                DECL_GET_OR_RETURN(drawable, wall->GetDrawable());
 
                 float relHitPos = (ball->GetPosition().y - wall->GetPosition().y) /
                     (drawable->GetSize().x / 2.0f);
@@ -71,8 +71,7 @@ void PongCollisionManager::DynamicObjectToObjectResolution(IDynamicGameObject* o
                 }
             }
 
-            auto circle = dynamic_cast<IBoundingCircle*>(ball->GetVolume());
-            GET_OR_RETURN(circle, dynamic_cast<IBoundingCircle*>(ball->GetVolume()));
+            DECL_GET_OR_RETURN(circle, dynamic_cast<IBoundingCircle*>(ball->GetVolume()));
 
             float pushOut = circle->GetRadius() + 0.01f;
             sepVec = normal * pushOut;
@@ -88,7 +87,7 @@ void PongCollisionManager::DynamicObjectToObjectResolution(IDynamicGameObject* o
         ball->SetPosition(newPos);
 
 
-        GET_OR_RETURN(volume, ball->GetVolume());
+        DECL_GET_OR_RETURN(volume, ball->GetVolume());
         volume->Update(newPos);
 
         // Reflect ball using inferred/applied normal
@@ -101,7 +100,7 @@ void PongCollisionManager::DynamicObjectToObjectResolution(IDynamicGameObject* o
     // Handle paddle-to-wall collisions
     if (Player* ply = dynamic_cast<Player*>(obj1))
     {
-        GET_OR_RETURN(wall, dynamic_cast<Wall*>(obj2));
+        DECL_GET_OR_RETURN(wall, dynamic_cast<Wall*>(obj2));
 
         ply->ResolveCollisions(time, sepVec, 0);
     }
@@ -114,9 +113,9 @@ void PongCollisionManager::DynamicObjectToDynamicObjectResolution(IDynamicGameOb
 
     Vector2f sepVec = obj1->GetVolume()->GetSeparationVector(obj2->GetVolume());
 
-    GET_OR_RETURN(ball, dynamic_cast<Ball*>(obj1));
-    GET_OR_RETURN(paddle, dynamic_cast<Player*>(obj2));
-    GET_OR_RETURN(capsule, dynamic_cast<IBoundingCapsule*>(paddle->GetVolume()));
+    DECL_GET_OR_RETURN(ball, dynamic_cast<Ball*>(obj1));
+    DECL_GET_OR_RETURN(paddle, dynamic_cast<Player*>(obj2));
+    DECL_GET_OR_RETURN(capsule, dynamic_cast<IBoundingCapsule*>(paddle->GetVolume()));
 
     float relHitPos = (ball->GetPosition().y - paddle->GetPosition().y) /
         (capsule->GetLength() / 2.0f);

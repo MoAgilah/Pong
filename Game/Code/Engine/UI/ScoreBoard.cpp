@@ -12,6 +12,8 @@ ScoreBoard::ScoreBoard(const Vector2f& center)
 
 	TextConfig config;
 	config.m_fontName = "Pong";
+	config.m_colour = Colour::Black;
+	config.m_alignment = TextAlignment::Center;
 
 	for (auto& text : m_playersScoreText)
 		text = std::make_unique<SFText>(config);
@@ -24,12 +26,8 @@ void ScoreBoard::Place(PlayerIdentifiers playerID, int charSize, const Vector2f&
 	auto& currentScore = m_playersScoreText[playerID];
 	ENSURE_VALID(currentScore);
 
-	TextConfig config;
-	config.m_position = pos;
-	config.m_charSize = charSize;
-	config.m_colour = Colour::Black;
-	config.m_alignment = TextAlignment::Center;
-
+	currentScore->SetPosition(pos);
+	currentScore->SetCharSize(charSize);
 	currentScore->SetOutlineThickness(2);
 
 	if (m_rallyTallying)
@@ -37,16 +35,16 @@ void ScoreBoard::Place(PlayerIdentifiers playerID, int charSize, const Vector2f&
 		switch (playerID)
 		{
 		case Player1:
-			currentScore->Reset(std::format("Current Rallie Count: {}", m_playersScore[playerID]), config);
+			currentScore->SetText(std::format("Current Rallie Count: {}", m_playersScore[playerID]));
 			break;
 		case Player2:
-			currentScore->Reset(std::format("Highest Rallie Count: {}", m_playersScore[playerID]), config);
+			currentScore->SetText(std::format("Highest Rallie Count: {}", m_playersScore[playerID]));
 			break;
 		}
 	}
 	else
 	{
-		currentScore->Reset(std::to_string(m_playersScore[playerID]), config);
+		currentScore->SetText(std::to_string(m_playersScore[playerID]));
 	}
 }
 

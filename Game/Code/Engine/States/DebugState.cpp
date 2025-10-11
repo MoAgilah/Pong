@@ -40,5 +40,5 @@ void DebugState::Render()
 {
 	auto renderer = m_gameMgr->GetRenderer();
 
-	m_ply->Render(renderer);
+	m_ball->Render(renderer);
 }

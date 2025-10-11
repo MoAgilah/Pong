@@ -7,8 +7,8 @@
 
 void LoadResources()
 {
-	GET_OR_RETURN(gameMgr, GameManager::Get());
-	GET_OR_RETURN(scene, gameMgr->GetScene());
+	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+	DECL_GET_OR_RETURN(scene, gameMgr->GetScene());
 
 	scene->AddObjects();
 	scene->AddEnemies();
@@ -21,7 +21,7 @@ void LoadResources()
 }
 
 LoadingState::LoadingState(GameManager* gameMgr)
-	: IGameState(gameMgr), m_gamenameMessage({ "Pong",  180, { GameConstants::ScreenDim.x / 2.0f, GameConstants::ScreenDim.y / 8.f }, TextAnimType::Static }),
+	: IGameState(gameMgr), m_gamenameMessage({ "Pong",  180, GameConstants::ScaleScreenDim(0.5f, 0.125f) , TextAnimType::Static }),
 	m_loadingMessage({ "Pong", 60, { GameConstants::ScreenDim.x / 2.0f, (GameConstants::ScreenDim.y / 2.0f) + 30.f }, TextAnimType::Flashing })
 {}
 
@@ -65,7 +65,7 @@ void LoadingState::Update(float deltaTime)
 void LoadingState::Render()
 {
 	ENSURE_VALID(m_gameMgr);
-	GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
+	DECL_GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
 
 	m_backgroundSpr.Render(renderer);
 	m_gamenameMessage.Render(renderer);

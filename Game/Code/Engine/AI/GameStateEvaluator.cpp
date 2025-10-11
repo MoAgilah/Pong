@@ -24,76 +24,76 @@ void GameStateEvaluator::AddNewGoalHistoryEntry(PlayerIdentifiers id)
 
 void GameStateEvaluator::AddStandingBranch()
 {
-	GET_OR_RETURN(root, GetRoot());
+	DECL_GET_OR_RETURN(root, GetRoot());
 
 	auto ResetNode = std::make_shared<DecisionNode<GameStates, bool, int>>(
 		[](int _) { return true; }, GameStates::FreshStart);
 
-	GET_OR_RETURN(IsEven, AddNode(root, std::bind(&GameStateEvaluator::IsEven), GameStates::DeadEven, true));
+	DECL_GET_OR_RETURN(IsEven, AddNode(root, std::bind(&GameStateEvaluator::IsEven), GameStates::DeadEven, true));
 	IsEven->m_false = ResetNode;
 
-	GET_OR_RETURN(NotTied,AddNode(root, &GameStateEvaluator::IsWinning, GameStates::IsLeading, false));
+	DECL_GET_OR_RETURN(NotTied,AddNode(root, &GameStateEvaluator::IsWinning, GameStates::IsLeading, false));
 
-	GET_OR_RETURN(IsLeading, AddNode(NotTied, &GameStateEvaluator::IsJustAhead, GameStates::JustAhead, true));
-	GET_OR_RETURN(NotJustAhead, AddNode(IsLeading, &GameStateEvaluator::IsNarrowLead, GameStates::NarrowLead, false));
-	GET_OR_RETURN(NotSlimLead, AddNode(NotJustAhead, &GameStateEvaluator::IsSlimLead, GameStates::SlimLead, false));
-	GET_OR_RETURN(NotSolidLead, AddNode(NotSlimLead, &GameStateEvaluator::IsSolidLead, GameStates::SolidLead, false));
-	GET_OR_RETURN(NotCommandingLead, AddNode(NotSolidLead, &GameStateEvaluator::IsCommandingLead, GameStates::CommandingLead, false));
-	GET_OR_RETURN(NotRunawayLead, AddNode(NotCommandingLead, &GameStateEvaluator::IsRunawayLead, GameStates::RunawayLead, false));
-	GET_OR_RETURN(NotBlowOutMargin, AddNode(NotRunawayLead, &GameStateEvaluator::IsBlowoutMargin, GameStates::UnassailableLead, false));
+	DECL_GET_OR_RETURN(IsLeading, AddNode(NotTied, &GameStateEvaluator::IsJustAhead, GameStates::JustAhead, true));
+	DECL_GET_OR_RETURN(NotJustAhead, AddNode(IsLeading, &GameStateEvaluator::IsNarrowLead, GameStates::NarrowLead, false));
+	DECL_GET_OR_RETURN(NotSlimLead, AddNode(NotJustAhead, &GameStateEvaluator::IsSlimLead, GameStates::SlimLead, false));
+	DECL_GET_OR_RETURN(NotSolidLead, AddNode(NotSlimLead, &GameStateEvaluator::IsSolidLead, GameStates::SolidLead, false));
+	DECL_GET_OR_RETURN(NotCommandingLead, AddNode(NotSolidLead, &GameStateEvaluator::IsCommandingLead, GameStates::CommandingLead, false));
+	DECL_GET_OR_RETURN(NotRunawayLead, AddNode(NotCommandingLead, &GameStateEvaluator::IsRunawayLead, GameStates::RunawayLead, false));
+	DECL_GET_OR_RETURN(NotBlowOutMargin, AddNode(NotRunawayLead, &GameStateEvaluator::IsBlowoutMargin, GameStates::UnassailableLead, false));
 
-	GET_OR_RETURN(IsTrailing, AddNode(NotTied, &GameStateEvaluator::IsJustAhead, GameStates::JustBehind, false));
-	GET_OR_RETURN(NotNarrowDeficit, AddNode(IsTrailing, &GameStateEvaluator::IsNarrowLead, GameStates::NarrowDeficit, false));
-	GET_OR_RETURN(NotModerateDeficit, AddNode(NotNarrowDeficit, &GameStateEvaluator::IsSlimLead, GameStates::ModerateDeficit, false));
-	GET_OR_RETURN(NotSignificantlyBehind, AddNode(NotModerateDeficit, &GameStateEvaluator::IsSolidLead, GameStates::SignificantlyBehind, false));
-	GET_OR_RETURN(NotFallingTooFarBehind, AddNode(NotSignificantlyBehind, &GameStateEvaluator::IsCommandingLead, GameStates::FallingTooFarBehind, false));
-	GET_OR_RETURN(NotGettingCrushed, AddNode(NotFallingTooFarBehind, &GameStateEvaluator::IsRunawayLead, GameStates::GettingCrushed, false));
-	GET_OR_RETURN(NotHopelessDeficit, AddNode(NotGettingCrushed, &GameStateEvaluator::IsBlowoutMargin, GameStates::HopelessDeficit, false));
+	DECL_GET_OR_RETURN(IsTrailing, AddNode(NotTied, &GameStateEvaluator::IsJustAhead, GameStates::JustBehind, false));
+	DECL_GET_OR_RETURN(NotNarrowDeficit, AddNode(IsTrailing, &GameStateEvaluator::IsNarrowLead, GameStates::NarrowDeficit, false));
+	DECL_GET_OR_RETURN(NotModerateDeficit, AddNode(NotNarrowDeficit, &GameStateEvaluator::IsSlimLead, GameStates::ModerateDeficit, false));
+	DECL_GET_OR_RETURN(NotSignificantlyBehind, AddNode(NotModerateDeficit, &GameStateEvaluator::IsSolidLead, GameStates::SignificantlyBehind, false));
+	DECL_GET_OR_RETURN(NotFallingTooFarBehind, AddNode(NotSignificantlyBehind, &GameStateEvaluator::IsCommandingLead, GameStates::FallingTooFarBehind, false));
+	DECL_GET_OR_RETURN(NotGettingCrushed, AddNode(NotFallingTooFarBehind, &GameStateEvaluator::IsRunawayLead, GameStates::GettingCrushed, false));
+	DECL_GET_OR_RETURN(NotHopelessDeficit, AddNode(NotGettingCrushed, &GameStateEvaluator::IsBlowoutMargin, GameStates::HopelessDeficit, false));
 }
 
 void GameStateEvaluator::AddPerformanceBranch()
 {
 	AddBranch("Performance", std::make_shared<DecisionNode<GameStates, bool, int>>(&GameStateEvaluator::IsWinning, GameStates::TippingPoint));
-	GET_OR_RETURN(Performance, GetBranchNode("Performance"));
+	DECL_GET_OR_RETURN(Performance, GetBranchNode("Performance"));
 
 	auto PerformanceResetNode = std::make_shared<DecisionNode<GameStates, bool, int>>(
 		[](int _) { return true; }, GameStates::TippingPoint);
 
-	GET_OR_RETURN(IsAStalledLead, AddNode(Performance, std::bind(&GameStateEvaluator::IsAStalledLead), GameStates::StalledLead, true));
-	GET_OR_RETURN(IsNeckAndNeck1, AddNode(IsAStalledLead, &GameStateEvaluator::IsNeckAndNeck, GameStates::NeckAndNeck, false));
+	DECL_GET_OR_RETURN(IsAStalledLead, AddNode(Performance, std::bind(&GameStateEvaluator::IsAStalledLead), GameStates::StalledLead, true));
+	DECL_GET_OR_RETURN(IsNeckAndNeck1, AddNode(IsAStalledLead, &GameStateEvaluator::IsNeckAndNeck, GameStates::NeckAndNeck, false));
 	IsNeckAndNeck1->m_false = PerformanceResetNode;
 
-	GET_OR_RETURN(IsLosingMomentum, AddNode(IsAStalledLead, std::bind(&GameStateEvaluator::IsLosingMomentum), GameStates::LosingMomentum, true));
-	GET_OR_RETURN(IsUnderPressure, AddNode(IsLosingMomentum, std::bind(&GameStateEvaluator::IsUnderPressure), GameStates::UnderPressure, true));
+	DECL_GET_OR_RETURN(IsLosingMomentum, AddNode(IsAStalledLead, std::bind(&GameStateEvaluator::IsLosingMomentum), GameStates::LosingMomentum, true));
+	DECL_GET_OR_RETURN(IsUnderPressure, AddNode(IsLosingMomentum, std::bind(&GameStateEvaluator::IsUnderPressure), GameStates::UnderPressure, true));
 
 	// A ComebackInProgress can transition into ClosingTheGap and eventually SmellingBlood if the trailing player gets close to tying the score.
-	GET_OR_RETURN(IsAComebackInProgress, AddNode(Performance, std::bind(&GameStateEvaluator::IsComebackInProgress), GameStates::ComebackInProgress, false));
-	GET_OR_RETURN(IsNeckAndNeck2, AddNode(IsAComebackInProgress, &GameStateEvaluator::IsNeckAndNeck, GameStates::NeckAndNeck, false));
+	DECL_GET_OR_RETURN(IsAComebackInProgress, AddNode(Performance, std::bind(&GameStateEvaluator::IsComebackInProgress), GameStates::ComebackInProgress, false));
+	DECL_GET_OR_RETURN(IsNeckAndNeck2, AddNode(IsAComebackInProgress, &GameStateEvaluator::IsNeckAndNeck, GameStates::NeckAndNeck, false));
 	IsNeckAndNeck2->m_false, PerformanceResetNode;
 
-	GET_OR_RETURN(IsClosingTheGap, AddNode(IsAComebackInProgress, std::bind(&GameStateEvaluator::IsClosingTheGap), GameStates::ClosingTheGap, true));
-	GET_OR_RETURN(IsSmellingBlood, AddNode(IsClosingTheGap, std::bind(&GameStateEvaluator::IsSmellingBlood), GameStates::SmellingBlood, true));
+	DECL_GET_OR_RETURN(IsClosingTheGap, AddNode(IsAComebackInProgress, std::bind(&GameStateEvaluator::IsClosingTheGap), GameStates::ClosingTheGap, true));
+	DECL_GET_OR_RETURN(IsSmellingBlood, AddNode(IsClosingTheGap, std::bind(&GameStateEvaluator::IsSmellingBlood), GameStates::SmellingBlood, true));
 }
 
 void GameStateEvaluator::AddCriticalBranch()
 {
 	AddBranch("Critical", std::make_shared<DecisionNode<GameStates, bool, int>>(&GameStateEvaluator::IsWinning, GameStates::NonCritical));
-	GET_OR_RETURN(Critical, GetBranchNode("Critical"));
+	DECL_GET_OR_RETURN(Critical, GetBranchNode("Critical"));
 
 	auto CriticalResetNode = std::make_shared<DecisionNode<GameStates, bool, int>>(
 		[](int _) { return true; }, GameStates::NonCritical);
 
-	GET_OR_RETURN(IsAtMatchPoint, AddNode(Critical, std::bind(GameStateEvaluator::IsAtMatchPoint), GameStates::MatchPoint, true));
+	DECL_GET_OR_RETURN(IsAtMatchPoint, AddNode(Critical, std::bind(GameStateEvaluator::IsAtMatchPoint), GameStates::MatchPoint, true));
 	IsAtMatchPoint->m_false = CriticalResetNode;
 
-	GET_OR_RETURN(IsInSuddenDeath1, AddNode(IsAtMatchPoint, std::bind(GameStateEvaluator::IsInSuddenDeath), GameStates::SuddenDeath, true));
-	GET_OR_RETURN(HasFailedToCloseTheMatch, AddNode(IsInSuddenDeath1, std::bind(GameStateEvaluator::HasFailedToCloseTheGame), GameStates::FailedToCloseTheGame, false));
+	DECL_GET_OR_RETURN(IsInSuddenDeath1, AddNode(IsAtMatchPoint, std::bind(GameStateEvaluator::IsInSuddenDeath), GameStates::SuddenDeath, true));
+	DECL_GET_OR_RETURN(HasFailedToCloseTheMatch, AddNode(IsInSuddenDeath1, std::bind(GameStateEvaluator::HasFailedToCloseTheGame), GameStates::FailedToCloseTheGame, false));
 
-	GET_OR_RETURN(IsFacingElimination, AddNode(Critical, std::bind(GameStateEvaluator::IsFacingElimination), GameStates::FacingElimination, false));
+	DECL_GET_OR_RETURN(IsFacingElimination, AddNode(Critical, std::bind(GameStateEvaluator::IsFacingElimination), GameStates::FacingElimination, false));
 	IsFacingElimination->m_false = CriticalResetNode;
 
-	GET_OR_RETURN(IsInSuddenDeath2, AddNode(IsFacingElimination, std::bind(GameStateEvaluator::IsInSuddenDeath), GameStates::SuddenDeath, true));
-	GET_OR_RETURN(HasSavedTheMatch, AddNode(IsInSuddenDeath2, std::bind(GameStateEvaluator::HasSavedTheGame), GameStates::GamePointSaved, false));
+	DECL_GET_OR_RETURN(IsInSuddenDeath2, AddNode(IsFacingElimination, std::bind(GameStateEvaluator::IsInSuddenDeath), GameStates::SuddenDeath, true));
+	DECL_GET_OR_RETURN(HasSavedTheMatch, AddNode(IsInSuddenDeath2, std::bind(GameStateEvaluator::HasSavedTheGame), GameStates::GamePointSaved, false));
 }
 
 bool GameStateEvaluator::IsNeckAndNeck(int standing)

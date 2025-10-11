@@ -45,8 +45,8 @@ Wall::Wall(const WallConfig& config)
 
 void Wall::Update(float deltaTime)
 {
-	GET_OR_RETURN(gameMgr, GameManager::Get());
-	GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+	DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
 
 	colMgr->ProcessCollisions(this);
 }

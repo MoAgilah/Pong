@@ -13,7 +13,7 @@ MatchCtrl::MatchCtrl()
 	m_resultsConfig("Pong", 70, GameConstants::ScreenDim / 2.0f, TextAnimType::Flashing, Colour::Black, TextAlignment::Center),
 	m_centerText(m_countdownConfig)
 {
-	InitCountdownText(&m_centerText, 3, "Go!");
+	m_centerText.InitCountdownText(3, "Go!");
 }
 
 void MatchCtrl::SetRallyTallying()
@@ -46,7 +46,9 @@ void MatchCtrl::Update(float deltaTime)
 
 		if (m_gameOver)
 		{
-			InitFlashingText(&m_centerText, std::format("{} WINS!", WinningPlayer), true, m_resultsConfig);
+			m_centerText = SFAnimatedText(m_resultsConfig);
+			m_centerText.SetIsLooping(true);
+			m_centerText.SetText(std::format("{} WINS!", WinningPlayer));
 			m_centerText.SetIsPaused(false);
 		}
 	}
@@ -64,8 +66,8 @@ void MatchCtrl::Render(IRenderer* renderer)
 void MatchCtrl::Reset()
 {
 	m_scoreBoard.Reset();
-	InitCountdownText(&m_centerText, 3, "Go!", m_countdownConfig);
-	m_centerText.SetIsPaused(false);
+	m_centerText = SFAnimatedText(m_countdownConfig);
+	m_centerText.InitCountdownText(3, "Go!");
 }
 
 void MatchCtrl::PlacePlayersScoreCard(PlayerIdentifiers playerID, int charSize, const Vector2f& pos)

@@ -13,7 +13,7 @@
 GameCourt::GameCourt()
 {
 	m_backgroundSpr = std::make_shared<SFSprite>("Court");
-	GET_OR_RETURN(bkgSpr, dynamic_cast<SFSprite*>(m_backgroundSpr.get()));
+	DECL_GET_OR_RETURN(bkgSpr, dynamic_cast<SFSprite*>(m_backgroundSpr.get()));
 
 	bkgSpr->SetScale(GameConstants::Scale);
 	bkgSpr->SetOrigin(GameConstants::ScreenDim / 2.f);
@@ -24,7 +24,7 @@ void GameCourt::Update(float deltaTime)
 {
 	UpdateGUI(deltaTime);
 
-	GET_OR_RETURN(ball, dynamic_cast<Ball*>(GetObjectByName("Ball")));
+	DECL_GET_OR_RETURN(ball, dynamic_cast<Ball*>(GetObjectByName("Ball")));
 
 	if (m_matchCtrl.IsReady() && !m_matchCtrl.IsOver())
 	{
@@ -53,8 +53,8 @@ void GameCourt::Update(float deltaTime)
 			object->Update(deltaTime);
 		}
 
-		GET_OR_RETURN(gameMgr, GameManager::Get());
-		GET_OR_RETURN(camera, gameMgr->GetCamera());
+		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+		DECL_GET_OR_RETURN(camera, gameMgr->GetCamera());
 
 		if (GameMode::s_type == vsWall)
 			m_matchCtrl.SetPlayerScore(Player1, ball->GetRallieCount());
