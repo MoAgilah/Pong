@@ -20,9 +20,11 @@ This project exists to:
 
 ## 🧱 Project Structure
 ```
-Game/
-├─ Code/ # Game specific assets
-├─ Resources/ # Any game specific assets
-└─ README.md
+Pong/
+├── Game/
+│ ├── Code/ # Game-specific source code (entities, logic, main loop)
+│ └── Resources/ # Game-specific assets (textures, sounds, etc.)
+├── SFMLEngine/ # Submodule: the SFMLEngine repository
+└── README.md
 ```
 
