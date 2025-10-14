@@ -190,10 +190,10 @@ Designed as a lightweight demonstration of real-time input handling, object upda
 
 ---
 
-## 💡 Credits
-
-Built and maintained by [**MoAgilah**](https://github.com/MoAgilah)  
-
-Powered by [**SFMLEngine**](https://github.com/MoAgilah/SFMLEngine) — the modular, backend-agnostic engine powering all current and upcoming projects including [**SuperMarioWorldClone**](https://github.com/MoAgilah/SuperMarioWorldClone).
+## 👤 Author
+**Mohamed Agilah**  
+🎓 Games Programmer & AI Developer  
+🌐 [Portfolio Website](https://moagilah.com/)  
+📧 Contact: agilahmohamed@gmail.com  
 
 
