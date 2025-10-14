@@ -19,4 +19,10 @@ This project exists to:
 ---
 
 ## 🧱 Project Structure
+```
+Game/
+├─ Code/ # Game specific assets
+├─ Resources/ # Any game specific assets
+└─ README.md
+```
 
