@@ -17,6 +17,116 @@ This project exists to:
 - Help onboard new users by lowering the barrier to experimenting with the engine  
 
 ---
+## 📦 Download & Run
+
+You can download the latest standalone executable here:
+
+👉 [**Download Standalone Executable**](https://raw.githubusercontent.com/MoAgilah/Pong/master/Bin/Pong.zip)
+
+After downloading:
+
+- Extract the `.zip` file.  
+- Open the folder and run the executable:
+  - **Windows:** `Pong.exe`
+- Use the menus and control instructions below to start playing.
+
+---
+
+## 🕹️ How to Start / Mode Select
+
+When you launch the game:
+
+1. The **Loading Screen** will appear briefly while assets are initialised.  
+2. You’ll then enter the **Main Menu**, where you can choose:
+   - **Player vs A.I**
+   - **Player vs Player**
+   - **A.I vs A.I**
+   - **Player vs Wall** (Practice Mode)
+
+Use **Up / Down** and **Enter** to navigate menus.  
+Some menus also use **Left / Right** for side or difficulty selection.
+
+### Menu Flow
+- Select your **game mode** → choose **player sides** → select **difficulty** → start match.  
+- Once selections are made, you’ll transition to the game court (or practice court for wall mode).
+
+---
+
+## 🌍 Global Actions
+
+| Action                  | Key          |
+|--------------------------|--------------|
+| Open / Close Pause Menu  | **Space**    |
+| Confirm / Select         | **Enter**    |
+| Navigate Up / Down       | **↑ / ↓**    |
+| Navigate Left / Right    | **← / →**    |
+| Exit Game (any time)     | **Esc**      |
+
+---
+
+## ⏸️ Pause Menu
+
+A global **Pause Menu** is available during gameplay.
+
+**Controls:**
+- **Up / Down** – navigate options  
+- **Enter** – confirm selection  
+
+**Options:**
+- **Resume** – return to the match  
+- **To Title** – return to the main menu  
+- **Quit** – close the game  
+
+---
+
+## 🎮 Player Controls
+
+### Player 1
+| Action           | Key          |
+|------------------|--------------|
+| Move Up          | **W**        |
+| Move Down        | **S**        |
+| Fast Shot        | **Left Shift** |
+| Slow Shot        | **Left Ctrl** |
+| Left Spin        | **A**        |
+| Right Spin       | **D**        |
+| Top Spin         | **Q**        |
+| Back Spin        | **Z**        |
+
+### Player 2
+| Action           | Key          |
+|------------------|--------------|
+| Move Up          | **I**        |
+| Move Down        | **K**        |
+| Fast Shot        | **Right Shift** |
+| Slow Shot        | **Right Ctrl** |
+| Left Spin        | **J**        |
+| Right Spin       | **L**        |
+| Top Spin         | **U**        |
+| Back Spin        | **M**        |
+
+---
+
+## 🤖 AI Modes
+
+In **AI vs AI** or **Player vs AI**, the A.I. dynamically adjusts:
+- **Reaction time**, **fatigue**, and **stress** based on match flow.  
+- **Shot selection** (fast, slow, spin, fake, or corner shots) driven by difficulty level.  
+
+You can observe A.I. behavior as a demonstration of decision-making and shot prediction built atop the `SFMLEngine` framework.
+
+---
+
+## 🏟️ Practice Mode
+
+- **Player vs Wall** allows endless rallies against a single side wall.  
+- Rally count is tracked as your score.  
+- Ideal for testing paddle control and ball physics.
+
+---
+
+> “Pong demonstrates the flexibility of the SFMLEngine — from dynamic menus to adaptive AI behavior — all while keeping gameplay simple and fun.”
+
 
 ## 🧱 Project Structure
 ```
