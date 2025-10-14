@@ -28,3 +28,14 @@ Pong/
 └── README.md
 ```
 
+
+---
+
+## ⚙️ Getting Started
+
+### 1. Clone with Submodules
+```
+git clone https://github.com/MoAgilah/Pong.git
+cd Pong
+git submodule update --init --recursive
+```
