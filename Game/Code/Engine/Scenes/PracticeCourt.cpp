@@ -111,10 +111,10 @@ bool PracticeCourt::AddObjects()
 	switch (GameMode::s_player1)
 	{
 	case Player1:
-		EmplaceObjectOrThrow<Wall>("SideWall", SetHorizontalWall({ scrCen.x - halfWallThick, scrCen.y }));
+		EmplaceObjectOrThrow<Wall>("SideWall", SetVerticalWall(Vector2f(GameConstants::ScreenDim.y - halfWallThick, scrCen.y)));
 		break;
 	case Player2:
-		EmplaceObjectOrThrow<Wall>("SideWall", SetHorizontalWall({ halfWallThick, scrCen.y }));
+		EmplaceObjectOrThrow<Wall>("SideWall", SetVerticalWall(Vector2f(halfWallThick, scrCen.y)));
 		break;
 	}
 

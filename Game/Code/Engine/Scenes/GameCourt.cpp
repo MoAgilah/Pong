@@ -136,8 +136,8 @@ bool GameCourt::AddForeGroundObjects()
 	auto scrCen = GameConstants::ScreenDim * 0.5f;
 	auto halfWallThick = DifficultyMode::wallThickness * 0.5f;
 
-	EmplaceObjectOrThrow<Wall>("TopWall", SetHorizontalWall({ scrCen.x, halfWallThick }));
-	EmplaceObjectOrThrow<Wall>("BottomWall", SetHorizontalWall({ scrCen.x, scrCen.y - halfWallThick }));
+	EmplaceObjectOrThrow<Wall>("TopWall", SetHorizontalWall(Vector2f(scrCen.x, halfWallThick)));
+	EmplaceObjectOrThrow<Wall>("BottomWall", SetHorizontalWall(Vector2f(scrCen.x, GameConstants::ScreenDim.y - halfWallThick)));
 
 	return true;
 }

@@ -50,6 +50,10 @@ void MainState::Render()
 
 	m_gameMgr->GetCamera()->Reset(renderer);
 	m_gameMgr->GetScene()->Render(renderer);
-	m_gameMgr->GetCollisionMgr()->Render(renderer);
-	m_gameMgr->GetCamera()->RenderDebug(renderer);
+
+	if (GameConstants::DRender)
+	{
+		m_gameMgr->GetCollisionMgr()->Render(renderer);
+		m_gameMgr->GetCamera()->RenderDebug(renderer);
+	}
 }
