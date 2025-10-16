@@ -186,7 +186,7 @@ Designed as a lightweight demonstration of real-time input handling, object upda
 - [ ] Add sound effects using the engine’s audio system  
 - [ ] Introduce AI-controlled opponent (tying into [**AI-Game-Controller**](https://github.com/MoAgilah/AI-Game-Controller) concepts)  
 - [ ] Add networked or local multiplayer  
-- [ ] Experiment with additional backends (DirectX, etc.) once supported by [**SFMLEngine**](https://github.com/MoAgilah/SFMLEngine)  
+- [ ] Experiment with additional backends (DirectX, etc.) once supported.  
 
 ---
 
