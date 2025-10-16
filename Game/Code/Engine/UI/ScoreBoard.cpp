@@ -13,7 +13,7 @@ ScoreBoard::ScoreBoard(const Vector2f& center)
 	TextConfig config;
 	config.m_fontName = "Pong";
 	config.m_colour = Colour::Black;
-	config.m_alignment = TextAlignment::Center;
+	config.m_alignment = TextAlignment::None;
 
 	for (auto& text : m_playersScoreText)
 		text = std::make_unique<SFText>(config);
