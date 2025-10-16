@@ -87,52 +87,61 @@ void GameCourt::ResetScene()
 	IScene::ResetScene();
 }
 
-void GameCourt::AddGUI()
+void GameCourt::SpawnGameObjectAt(const std::string& id, std::shared_ptr<GameObject> obj, const Vector2f& pos)
+{
+}
+
+bool GameCourt::AddEnemies()
+{
+	return true;
+}
+
+bool GameCourt::AddGUI()
 {
 	float charSize = GameConstants::ScreenDim.y * 0.08f;
 
 	m_matchCtrl.PlacePlayersScoreCard(Player1, (int)charSize, Vector2f(GameConstants::ScreenDim.x * 0.167f, charSize * 0.75f));
 	m_matchCtrl.PlacePlayersScoreCard(Player2, (int)charSize, Vector2f(GameConstants::ScreenDim.x * 0.833f, charSize * 0.75f));
+
+	return true;
 }
 
-void GameCourt::AddEnemies()
+bool GameCourt::AddObjects()
 {
-
-}
-
-void GameCourt::AddObjects()
-{
-	m_objects.emplace("Ball", std::make_shared<Ball>(Vector2f(GameConstants::ScreenDim / 2.0f)));
+	EmplaceObjectOrThrow<Ball>("Ball", GameConstants::ScreenDim * 0.5f);
 
 	switch (GameMode::s_type)
 	{
 	case VsAI:
-		m_objects.emplace("FirstPlayer", std::make_shared<Player>(GameMode::s_player1));
-		m_objects.emplace("SecondPlayer", std::make_shared<AutomatedPlayer>(GameMode::s_player2));
+		EmplaceObjectOrThrow<Player>("FirstPlayer", GameMode::s_player1);
+		EmplaceObjectOrThrow<AutomatedPlayer>("SecondPlayer", GameMode::s_player2);
 		break;
 	case VsPly:
-		m_objects.emplace("FirstPlayer", std::make_shared<Player>(GameMode::s_player1));
-		m_objects.emplace("SecondPlayer", std::make_shared<Player>(GameMode::s_player2));
+		EmplaceObjectOrThrow<Player>("FirstPlayer", GameMode::s_player1);
+		EmplaceObjectOrThrow<Player>("SecondPlayer", GameMode::s_player2);
 		break;
 	case AIvsAI:
-		m_objects.emplace("FirstPlayer", std::make_shared<AutomatedPlayer>(GameMode::s_player1));
-		m_objects.emplace("SecondPlayer", std::make_shared<AutomatedPlayer>(GameMode::s_player2));
+		EmplaceObjectOrThrow<AutomatedPlayer>("FirstPlayer", GameMode::s_player1);
+		EmplaceObjectOrThrow<AutomatedPlayer>("SecondPlayer", GameMode::s_player2);
 		break;
 	}
 
 	m_ballPhysics.SetCurrentBall(dynamic_cast<Ball*>(GetObjectByName("Ball")));
+
+	return true;
 }
 
-void GameCourt::AddForeGroundObjects()
+bool GameCourt::AddForeGroundObjects()
 {
-	m_objects.emplace("TopWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, DifficultyMode::wallThickness / 2.f))));
-	m_objects.emplace("BottomWall", std::make_shared<Wall>(SetHorizontalWall(Vector2f(GameConstants::ScreenDim.x / 2.f, GameConstants::ScreenDim.y - (DifficultyMode::wallThickness / 2.f)))));
+	auto scrCen = GameConstants::ScreenDim * 0.5f;
+	auto halfWallThick = DifficultyMode::wallThickness * 0.5f;
+
+	EmplaceObjectOrThrow<Wall>("TopWall", SetHorizontalWall({ scrCen.x, halfWallThick }));
+	EmplaceObjectOrThrow<Wall>("BottomWall", SetHorizontalWall({ scrCen.x, scrCen.y - halfWallThick }));
+
+	return true;
 }
 
-void GameCourt::SpawnGameObjectAt(const std::string& id, std::shared_ptr<GameObject> obj, const Vector2f& pos)
-{
-
-}
 
 void GameCourt::UpdateGUI(float deltaTime)
 {

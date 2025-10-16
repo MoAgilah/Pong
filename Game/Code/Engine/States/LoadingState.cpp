@@ -10,14 +10,9 @@ void LoadResources()
 	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
 	DECL_GET_OR_RETURN(scene, gameMgr->GetScene());
 
-	scene->AddObjects();
-	scene->AddEnemies();
-	scene->AddForeGroundObjects();
-	scene->AddGUI();
-
 	std::this_thread::sleep_for(std::chrono::seconds(3));
 
-	GameConstants::GameIsReady = true;
+	GameConstants::GameIsReady = scene->Initialise();
 }
 
 LoadingState::LoadingState(GameManager* gameMgr)
