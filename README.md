@@ -21,12 +21,12 @@ This project exists to:
 
 You can download the latest standalone executable here:
 
-👉 [**Download Standalone Executable**](https://raw.githubusercontent.com/MoAgilah/Pong/master/Bin/Pong.zip)
+[Download Standalone Executable](https://raw.githubusercontent.com/MoAgilah/AI-Game-Controller/master/SFMLGameEngine/Bin/Pong.zip)
 
 After downloading:
 
 - Extract the `.zip` file.  
-- Open the folder and run the executable:
+- Open the release folder and run the executable:
   - **Windows:** `Pong.exe`
 - Use the menus and control instructions below to start playing.
 
