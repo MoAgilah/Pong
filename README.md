@@ -188,6 +188,54 @@ Designed as a lightweight demonstration of real-time input handling, object upda
 
 ---
 
+## 🏓 Splash Screens
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Title Screen</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/Title.jpeg" alt="Title Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Loading Screen</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/Loading.jpeg" alt="Loading Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Mode Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/ModeSelect.jpeg" alt="Mode Selection Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Difficulty Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/DiffSelect.jpeg" alt="Difficulty Selection Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Side Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/SideSelect.jpeg" alt="Side Selection Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Two Player Side Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/TwoSideSelect.jpeg" alt="Two Player Side Selection Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Practice Mode</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/PracticeMode.jpeg" alt="Practice Mode Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Versus Mode</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/VsMode.jpeg" alt="Versus Mode Screen" width="250">
+    </td>
+  </tr>
+</table>
+
+---
+
+
 ## 🛠️ Future Extensions
 
 - [ ] Add sound effects using the engine’s audio system  
