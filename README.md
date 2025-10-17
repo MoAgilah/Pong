@@ -28,7 +28,7 @@ This project exists to:
 
 You can download the latest standalone executable here:
 
-[Download Standalone Executable](https://github.com/MoAgilah/AI-Game-Controller/raw/master/SFMLGameEngine/Bin/Pong.zip)
+[Download Standalone Executable](https://github.com/MoAgilah/Pong/raw/master/Game/Bin/Pong.zip)
 
 
 After downloading:
