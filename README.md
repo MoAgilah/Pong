@@ -73,8 +73,8 @@ A global **Pause Menu** is available during gameplay.
 - **Enter** – confirm selection  
 
 **Options:**
-- **Resume** – return to the match  
-- **To Title** – return to the main menu  
+- **Resume Game** – return to the match  
+- **Restart Game** – reset current game 
 - **Quit** – close the game  
 
 ---
