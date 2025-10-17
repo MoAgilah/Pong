@@ -188,6 +188,14 @@
     <Font Include="Resources\Fonts\Pong.ttf" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Preview\Screenshots\DiffSelect.jpeg" />
+    <Image Include="Preview\Screenshots\Loading.jpeg" />
+    <Image Include="Preview\Screenshots\ModeSelect.jpeg" />
+    <Image Include="Preview\Screenshots\PracticeMode.jpeg" />
+    <Image Include="Preview\Screenshots\SideSelect.jpeg" />
+    <Image Include="Preview\Screenshots\Title.jpeg" />
+    <Image Include="Preview\Screenshots\TwoSideSelect.jpeg" />
+    <Image Include="Preview\Screenshots\VsMode.jpeg" />
     <Image Include="Resources\Textures\Ball.png" />
     <Image Include="Resources\Textures\Court.png" />
     <Image Include="Resources\Textures\CtrlCursor.png" />
