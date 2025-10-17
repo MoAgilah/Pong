@@ -1,5 +1,12 @@
 # Pong
 
+| **VS Mode** | **Practice Mode** |
+|---|---|
+| ![Vs Demo](https://github.com/MoAgilah/Pong/blob/master/Game/Preview/GIFs/VsMode.gif) | ![Practice Demo](https://github.com/MoAgilah/Pong/blob/master/Game/Preview/GIFs/PracticeMode.gif) |
+
+---
+
+## 🧠 Overview
 A minimalist Pong clone built to **demonstrate** usage of **SFMLEngine** — a backend-agnostic C++ engine core with an SFML backend.
 
 This project exists to:
