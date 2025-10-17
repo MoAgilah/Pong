@@ -67,7 +67,7 @@ private:
 	int m_verticalWall = 0;
 	bool m_collidedWithBall = false;
 	float m_paddleSpeed = GameConstants::ObjectSpeed * 0.8f;
-	std::array<KeyCode, KeyCount> m_keys;
+	std::array<KeyCode, MaxKeys> m_keys;
 	std::vector<KeyCode> m_specialKeys;
 	PlayerIdentifiers m_playerID;
 };

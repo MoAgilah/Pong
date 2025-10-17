@@ -7,13 +7,13 @@
 #include <iostream>
 
 DebugState::DebugState(GameManager* gameMgr)
-	: IGameState(gameMgr)
+	: IGameState(gameMgr), m_countdownConfig("Pong", 150, GameConstants::ScreenDim / 2.0f, TextAnimType::Countdown),
+	m_sfText(m_countdownConfig)
 {}
 
 void DebugState::Initialise()
 {
-	m_ball = std::make_shared<Ball>(GameConstants::ScreenDim * 0.5f);
-	ENSURE_VALID(m_ball);
+	m_sfText.InitCountdownText(3, "Go!");
 }
 
 void DebugState::Pause()
@@ -30,8 +30,7 @@ void DebugState::ProcessInputs()
 
 void DebugState::Update(float deltaTime)
 {
-	ENSURE_VALID(m_ball);
-    m_ball->Update(deltaTime);
+	m_sfText.Update(deltaTime);
 }
 
 
@@ -40,5 +39,5 @@ void DebugState::Render()
 {
 	auto renderer = m_gameMgr->GetRenderer();
 
-	m_ball->Render(renderer);
+	m_sfText.Render(renderer);
 }

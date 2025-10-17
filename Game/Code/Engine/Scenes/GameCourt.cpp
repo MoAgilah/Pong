@@ -43,11 +43,15 @@ void GameCourt::Update(float deltaTime)
 
 				m_matchCtrl.SetCurrentMatchResults(ply->GetPlayerID());
 
-				GET_OR_CONTINUE(aiPly, dynamic_cast<AutomatedPlayer*>(ply));
-
-				aiPly->UpdateFatigue(ball->GetRallieCount());
-				auto id = aiPly->GetPlayerID();
-				aiPly->UpdateStress(m_matchCtrl.GetPlayerScore(id), m_matchCtrl.GetPlayerScore(GameMode::GetOpposite(id)));
+				if (auto* aiPly = dynamic_cast<AutomatedPlayer*>(ply))
+				{
+					aiPly->UpdateFatigue(ball->GetRallieCount());
+					auto id = aiPly->GetPlayerID();
+					aiPly->UpdateStress(
+						m_matchCtrl.GetPlayerScore(id),
+						m_matchCtrl.GetPlayerScore(GameMode::GetOpposite(id))
+					);
+				}
 			}
 
 			object->Update(deltaTime);

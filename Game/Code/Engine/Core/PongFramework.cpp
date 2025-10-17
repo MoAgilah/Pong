@@ -4,6 +4,7 @@
 #include "../States/TitleState.h"
 #include "../States/DebugState.h"
 #include "../../Utilities/DifficultyMode.h"
+#include <Engine/Core/Constants.h>
 #include <Utilities/Utils.h>
 
 PongFramework::PongFramework()

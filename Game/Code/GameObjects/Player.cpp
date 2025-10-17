@@ -28,6 +28,7 @@ Player::Player(PlayerIdentifiers plyID)
 	switch (m_playerID)
 	{
 	case Player1:
+	{
 		m_keys[Keys::MoveUpKey] = KeyCode::W;
 		m_keys[Keys::MoveDownKey] = KeyCode::S;
 		m_keys[Keys::FastShotKey] = KeyCode::LShift;
@@ -38,9 +39,10 @@ Player::Player(PlayerIdentifiers plyID)
 		m_keys[Keys::BackSpinKey] = KeyCode::Z;
 
 		SetInitialPosition(Vector2f(50.f, GameConstants::ScreenDim.y / 2.0f));
-
+	}
 		break;
 	case Player2:
+	{
 		m_keys[Keys::MoveUpKey] = KeyCode::I;
 		m_keys[Keys::MoveDownKey] = KeyCode::K;
 		m_keys[Keys::FastShotKey] = KeyCode::RShift;
@@ -51,7 +53,7 @@ Player::Player(PlayerIdentifiers plyID)
 		m_keys[Keys::BackSpinKey] = KeyCode::M;
 
 		SetInitialPosition(Vector2f(GameConstants::ScreenDim.x - 50.f, GameConstants::ScreenDim.y / 2.0f));
-
+	}
 		break;
 	}
 

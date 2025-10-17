@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../GameObjects/Ball.h"
+#include <Drawables/SFText.h>
 #include <Engine/Core/GameManager.h>
 #include <Engine/Interface/Scene/IGameState.h>
 #include <memory.h>
@@ -21,5 +21,6 @@ public:
 
 private:
 
-	std::shared_ptr<Ball> m_ball;
+	TextConfig m_countdownConfig;
+	SFAnimatedText m_sfText;
 };

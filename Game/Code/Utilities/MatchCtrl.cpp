@@ -47,7 +47,6 @@ void MatchCtrl::Update(float deltaTime)
 		if (m_gameOver)
 		{
 			m_centerText = SFAnimatedText(m_resultsConfig);
-			m_centerText.SetIsLooping(true);
 			m_centerText.SetText(std::format("{} WINS!", WinningPlayer));
 			m_centerText.SetIsPaused(false);
 		}
