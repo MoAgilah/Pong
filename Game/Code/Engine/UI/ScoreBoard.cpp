@@ -35,10 +35,10 @@ void ScoreBoard::Place(PlayerIdentifiers playerID, int charSize, const Vector2f&
 		switch (playerID)
 		{
 		case Player1:
-			currentScore->SetText(std::format("Current Rallie Count: {}", m_playersScore[playerID]));
+			currentScore->SetText(std::format("Current Rallie Count:  {}", m_playersScore[playerID]));
 			break;
 		case Player2:
-			currentScore->SetText(std::format("Highest Rallie Count: {}", m_playersScore[playerID]));
+			currentScore->SetText(std::format("Highest Rallie Count:  {}", m_playersScore[playerID]));
 			break;
 		}
 	}

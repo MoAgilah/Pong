@@ -1,10 +1,11 @@
 #include "PauseMenuState.h"
 
 #include "TitleState.h"
+#include "../Collisions/PongCollisionManager.h"
 #include <Engine/Core/Constants.h>
 #include <Utilities/Utils.h>
 
-enum MenuPosition { Continue, Restart, ToMain };
+enum MenuPosition { Continue, Restart, Quit };
 
 PauseMenuState::PauseMenuState(GameManager* gameMgr)
 	: IGameState(gameMgr),
@@ -50,7 +51,7 @@ void PauseMenuState::Initialise()
 
 	GET_OR_RETURN(text, cell->AddTextElement(std::make_shared<SFAnimatedText>(textConfig)));
 	GET_OR_RETURN(sfText, dynamic_cast<SFAnimatedText*>(text));
-	sfText->InitFlashingText("Quit To Main Menu");
+	sfText->InitFlashingText("Quit");
 
 	cell->SetMenuSlotNumber(2);
 
@@ -115,8 +116,9 @@ void PauseMenuState::PerformMenuActions()
 		gameStateMgr->PopState();
 	}
 		break;
-	case ToMain:
-		gameStateMgr->ChangeState(new TitleState(m_gameMgr));
+	case Quit:
+		DECL_GET_OR_RETURN(renderer, m_gameMgr->GetRenderer());
+		renderer->GetWindow()->Close();
 		break;
 	}
 }
