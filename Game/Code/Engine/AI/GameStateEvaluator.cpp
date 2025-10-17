@@ -69,7 +69,7 @@ void GameStateEvaluator::AddPerformanceBranch()
 	// A ComebackInProgress can transition into ClosingTheGap and eventually SmellingBlood if the trailing player gets close to tying the score.
 	DECL_GET_OR_RETURN(IsAComebackInProgress, AddNode(Performance, std::bind(&GameStateEvaluator::IsComebackInProgress), GameStates::ComebackInProgress, false));
 	DECL_GET_OR_RETURN(IsNeckAndNeck2, AddNode(IsAComebackInProgress, &GameStateEvaluator::IsNeckAndNeck, GameStates::NeckAndNeck, false));
-	IsNeckAndNeck2->m_false, PerformanceResetNode;
+	IsNeckAndNeck2->m_false = PerformanceResetNode;
 
 	DECL_GET_OR_RETURN(IsClosingTheGap, AddNode(IsAComebackInProgress, std::bind(&GameStateEvaluator::IsClosingTheGap), GameStates::ClosingTheGap, true));
 	DECL_GET_OR_RETURN(IsSmellingBlood, AddNode(IsClosingTheGap, std::bind(&GameStateEvaluator::IsSmellingBlood), GameStates::SmellingBlood, true));
@@ -98,21 +98,16 @@ void GameStateEvaluator::AddCriticalBranch()
 
 bool GameStateEvaluator::IsNeckAndNeck(int standing)
 {
-	if (std::abs(standing) < 1)
+	if (std::abs(standing) < 1 || m_goalHistory.empty())
 		return false;
 
 	int counter = 0;
-	PlayerIdentifiers id = m_goalHistory.back();
-
-	for (auto it = m_goalHistory.rbegin() + 1; it != m_goalHistory.rend(); ++it)
-	{
-		if (*it == id)
-			break;
-
-		counter++;
+	auto id = m_goalHistory.back();
+	for (auto it = m_goalHistory.rbegin() + 1; it != m_goalHistory.rend(); ++it) {
+		if (*it == id) break;
+		++counter;
 		id = *it;
 	}
-
 	return counter > 2;
 }
 
@@ -205,21 +200,33 @@ bool GameStateEvaluator::IsInSuddenDeath()
 
 int GameStateEvaluator::GetScoreStreak(bool mine)
 {
-	auto predicate = mine
-		? [](int scorer) { return scorer == m_currentAnalyser; }
-	: [](int scorer) { return scorer != m_currentAnalyser; };
+	if (m_goalHistory.empty()) return 0;
 
-	return static_cast<int>(std::ranges::count_if(m_goalHistory | std::views::reverse, predicate));
+	const auto isMine = [&](PlayerIdentifiers who) {
+		return mine ? (who == m_currentAnalyser) : (who != m_currentAnalyser);
+		};
+
+	int streak = 0;
+	for (auto it = m_goalHistory.rbegin(); it != m_goalHistory.rend(); ++it) {
+		if (isMine(*it)) ++streak;
+		else break;
+	}
+	return streak;
 }
 
 int GameStateEvaluator::GetMyScore(int excludeLastN)
 {
-	return static_cast<int>(std::count(m_goalHistory.begin(), m_goalHistory.end() - excludeLastN, m_currentAnalyser));
+	const int n = std::min<int>(excludeLastN, static_cast<int>(m_goalHistory.size()));
+	if (m_goalHistory.empty()) return 0; // defensive
+	return static_cast<int>(std::count(m_goalHistory.begin(),
+		m_goalHistory.end() - n,
+		m_currentAnalyser));
 }
 
 int GameStateEvaluator::GetOpponentScore(int excludeLastN)
 {
-	return static_cast<int>(m_goalHistory.size() - excludeLastN) - GetMyScore(excludeLastN);
+	const int n = std::min<int>(excludeLastN, static_cast<int>(m_goalHistory.size()));
+	return static_cast<int>(m_goalHistory.size() - n) - GetMyScore(n);
 }
 
 bool GameStateEvaluator::HadDominantLeadBefore(bool mine, int streak)
