@@ -82,6 +82,12 @@
     <Filter Include="Resource Files\Texture">
       <UniqueIdentifier>{510ea807-c343-43a7-a4fb-c72da463ac70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Bin">
+      <UniqueIdentifier>{9552f426-01d3-43b2-8ac4-11cad869f0f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Previews">
+      <UniqueIdentifier>{e6c93cc6-77f8-42de-bed8-11f3f318ac99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\main.cpp">
@@ -237,5 +243,10 @@
     <Image Include="Resources\Textures\Wall.png">
       <Filter>Resource Files\Texture</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Bin\Pong.zip">
+      <Filter>Resource Files\Bin</Filter>
+    </None>
   </ItemGroup>
 </Project>

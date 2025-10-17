@@ -204,6 +204,9 @@
       <Project>{acc466dc-f0ab-4e8f-88e4-4859fabba6e3}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Bin\Pong.zip" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
