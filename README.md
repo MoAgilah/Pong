@@ -44,7 +44,7 @@ After downloading:
 
 When you launch the game:
 
-1. The **Loading Screen** will appear briefly while assets are initialised.  
+1. Press Any Button 
 2. You’ll then enter the **Main Menu**, where you can choose:
    - **Player vs A.I**
    - **Player vs Player**
@@ -53,6 +53,7 @@ When you launch the game:
 
 Use **Up / Down** and **Enter** to navigate menus.  
 Some menus also use **Left / Right** for side or difficulty selection.
+3. The **Loading Screen** will appear briefly while assets are initialised. 
 
 ### Menu Flow
 - Select your **game mode** → choose **player sides** → select **difficulty** → start match.  
