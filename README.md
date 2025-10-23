@@ -53,6 +53,7 @@ When you launch the game:
 
 Use **Up / Down** and **Enter** to navigate menus.  
 Some menus also use **Left / Right** for side or difficulty selection.
+
 3. The **Loading Screen** will appear briefly while assets are initialised. 
 
 ### Menu Flow
