@@ -28,7 +28,8 @@ This project exists to:
 
 You can download the latest standalone executable here:
 
-[Download Standalone Executable](https://raw.githubusercontent.com/MoAgilah/AI-Game-Controller/master/SFMLGameEngine/Bin/Pong.zip)
+[Download Standalone Executable](https://github.com/MoAgilah/Pong/raw/master/Game/Bin/Pong.zip)
+
 
 After downloading:
 
@@ -187,6 +188,54 @@ Classic **Pong** gameplay — two paddles, one ball, simple physics, and a scori
 Designed as a lightweight demonstration of real-time input handling, object updates, and rendering through [**SFMLEngine**](https://github.com/MoAgilah/SFMLEngine).
 
 ---
+
+## 🏓 Splash Screens
+
+<table>
+  <tr>
+    <td align="center">
+      <strong>Title Screen</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/Title.jpeg" alt="Title Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Loading Screen</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/Loading.jpeg" alt="Loading Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Mode Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/ModeSelect.jpeg" alt="Mode Selection Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Difficulty Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/DiffSelect.jpeg" alt="Difficulty Selection Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Side Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/SideSelect.jpeg" alt="Side Selection Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Two Player Side Selection</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/TwoSideSelect.jpeg" alt="Two Player Side Selection Screen" width="250">
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <strong>Practice Mode</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/PracticeMode.jpeg" alt="Practice Mode Screen" width="250">
+    </td>
+    <td align="center">
+      <strong>Versus Mode</strong><br>
+      <img src="https://raw.githubusercontent.com/MoAgilah/Pong/master/Game/Preview/Screenshots/VsMode.jpeg" alt="Versus Mode Screen" width="250">
+    </td>
+  </tr>
+</table>
+
+---
+
 
 ## 🛠️ Future Extensions
 
