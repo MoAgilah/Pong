@@ -92,6 +92,8 @@ protected:
 	void SetCollisionWithBall(bool hasCollided) override;
 
 private:
+	// === new: fallibility/difficulty scaling hook ===
+	void InitFallibilityScale();
 
 	bool ShouldReactToBall(const Vector2f& ballVel);
 
@@ -159,4 +161,9 @@ private:
 	bool m_lastSpeedShot = (std::rand() % 2 == 0);
 	bool m_lastWidthSpin = (std::rand() % 2 == 0);
 	bool m_lastLengthSpin = (std::rand() % 2 == 0);
+
+	// === new: guardrails/cooldowns & difficulty scaling ===
+	float m_dropoutCooldown = 0.0f;
+	float m_misfireCooldown = 0.0f;
+	float m_fallibilityScale = 1.0f;
 };

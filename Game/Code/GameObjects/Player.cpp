@@ -40,7 +40,7 @@ Player::Player(PlayerIdentifiers plyID)
 
 		SetInitialPosition(Vector2f(50.f, GameConstants::ScreenDim.y / 2.0f));
 	}
-		break;
+	break;
 	case Player2:
 	{
 		m_keys[Keys::MoveUpKey] = KeyCode::I;
@@ -54,7 +54,7 @@ Player::Player(PlayerIdentifiers plyID)
 
 		SetInitialPosition(Vector2f(GameConstants::ScreenDim.x - 50.f, GameConstants::ScreenDim.y / 2.0f));
 	}
-		break;
+	break;
 	}
 
 	for (auto it = m_keys.begin() + Keys::FastShotKey; it != m_keys.end(); ++it)
@@ -248,13 +248,29 @@ AutomatedPlayer::AutomatedPlayer(PlayerIdentifiers plyID)
 	}
 
 	m_reactionDelay = GenerateReactionDelay();
-
 	m_targetY = GetPosition().y;
+
+	// NEW: scale fallibility by difficulty
+	InitFallibilityScale();
+}
+
+void AutomatedPlayer::InitFallibilityScale()
+{
+	switch (DifficultyMode::difficulty)
+	{
+	case Easy:   m_fallibilityScale = 1.0f;  break;
+	case Normal: m_fallibilityScale = 0.70f; break;
+	case Hard:   m_fallibilityScale = 0.45f; break;
+	default:     m_fallibilityScale = 0.70f; break;
+	}
 }
 
 void AutomatedPlayer::Update(float deltaTime)
 {
 	m_opponent = GetOpponent();
+
+	// decay misfire cooldown here (we don't have a global DeltaTime)
+	m_misfireCooldown = std::max(0.0f, m_misfireCooldown - deltaTime);
 
 	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
 	DECL_GET_OR_RETURN(scene, gameMgr->GetScene());
@@ -311,8 +327,14 @@ void AutomatedPlayer::Reset()
 bool AutomatedPlayer::ShouldReactToBall(const Vector2f& ballVel)
 {
 	PlayerIdentifiers id = GetPlayerID();
+	bool ballComingToMe = !((id == Player1 && ballVel.x > 0) || (id == Player2 && ballVel.x < 0));
 
-	return !((id == Player1 && ballVel.x > 0) || (id == Player2 && ballVel.x < 0));
+	// tiny chance to "lose track" this frame; scaled by difficulty and stress
+	static std::uniform_real_distribution<float> odds(0.0f, 1.0f);
+	float loseTrack = (0.015f + 0.02f * std::clamp(m_stress, 0.0f, 2.0f)) * m_fallibilityScale;
+	if (ballComingToMe && odds(m_gen) < loseTrack) return false;
+
+	return ballComingToMe;
 }
 
 Player* AutomatedPlayer::GetOpponent()
@@ -348,7 +370,6 @@ bool AutomatedPlayer::BiasedRandomChoice(float biasFactor, bool& lastResult)
 
 float AutomatedPlayer::StandardShot()
 {
-	// Generate a small random offset within a safe range (-5 to 5)
 	static std::uniform_real_distribution<float> offsetDist(-7.50f, 7.5f);
 	return offsetDist(m_gen);
 }
@@ -360,21 +381,17 @@ float AutomatedPlayer::AggressiveShot()
 	float oppY = m_opponent->GetPosition().y;
 	float screenCenter = GameConstants::ScreenDim.y / 2.0f;
 
-	// Increase ball speed aggressively
 	BallPhysics::ApplyVelocityIncrease(1.1f);
 
-	// Calculate how far the opponent is from the center
 	float opponentOffset = oppY - screenCenter;
 
-	// Set aggressive shot target based on opponent position
-	float attackOffset = 15.0f; // Default aggressive offset to target edges
+	float attackOffset = 15.0f;
 
-	if (std::abs(opponentOffset) > (GameConstants::ScreenDim.y * 0.1f)) // If opponent is significantly off-center
+	if (std::abs(opponentOffset) > (GameConstants::ScreenDim.y * 0.1f))
 	{
-		attackOffset = (opponentOffset > 0) ? -10.0f : 10.0f; // If opponent is high, aim low, and vice versa
+		attackOffset = (opponentOffset > 0) ? -10.0f : 10.0f;
 	}
 
-	// Add slight randomness to avoid predictable shots
 	static std::uniform_real_distribution<float> randomDist(-3.0f, 3.0f);
 	attackOffset += randomDist(m_gen);
 
@@ -386,21 +403,18 @@ float AutomatedPlayer::DefensiveShot()
 	ENSURE_VALID_RET(m_opponent, 0.0f);
 
 	float ballSpeed = std::abs(BallPhysics::GetVelocity().x);
-	float oppY = m_opponent->GetPosition().y;
+	(void)ballSpeed;
 
-	// Reduce ball speed to make it easier to return
 	BallPhysics::ApplyVelocityDecrease(0.9f);
 
-	// Defensive positioning: aim for the middle of the paddle
 	float safeOffset = 5.0f;
+	float oppY = m_opponent->GetPosition().y;
 
-	// If opponent is near top, aim lower; if opponent is near bottom, aim higher
 	if (oppY < GameConstants::ScreenDim.y / 3.0f)
 		safeOffset = -5.0f;
 	else if (oppY > (2 * GameConstants::ScreenDim.y) / 3.0f)
 		safeOffset = 5.0f;
 
-	// Limit the offset to a reasonable range
 	return std::clamp(safeOffset, -7.0f, 7.0f);
 }
 
@@ -478,13 +492,10 @@ float AutomatedPlayer::WidthSpinShot()
 
 float AutomatedPlayer::FakeShot(int playstyle)
 {
-	// Calculate paddle move distance needed to reach predicted ball position
 	float paddleMoveDistance = std::abs(GetPosition().y - m_predictedY);
-
-	// Calculate the last possible moment to move
 	float lastMoveTime = m_timeToPaddle - (paddleMoveDistance / DifficultyMode::paddleSpeed);
 
-	m_timeDelay = std::max(0.1f, std::min(0.5f, lastMoveTime)); // Ensure it's not negative
+	m_timeDelay = std::max(0.1f, std::min(0.5f, lastMoveTime));
 
 	float shotOffset = 0;
 
@@ -516,7 +527,6 @@ float AutomatedPlayer::CornerShot()
 
 	float shotOffset = targetY - BallPhysics::GetPosition().y;
 
-	// Limit the offset to prevent unrealistic movement
 	return std::clamp(shotOffset, -15.0f, 15.0f);
 }
 
@@ -527,17 +537,12 @@ float AutomatedPlayer::WallShot()
 	const auto& ballPos = BallPhysics::GetPosition();
 	const auto& ballVel = BallPhysics::GetVelocity();
 
-	// Predict time for ball to reach opponent paddle
 	float timeToOpponent = (m_opponent->GetPosition().x - ballPos.x) / ballVel.x;
 	float predictedBallY = ballPos.y + (ballVel.y * timeToOpponent);
 
-	// Check if ball will hit the top or bottom wall
 	if (predictedBallY < 0.0f || predictedBallY > GameConstants::ScreenDim.y)
 	{
-		// Set bounce position as close as possible to the wall before reaching the opponent
 		float latestBounceY = (ballVel.y > 0) ? (GameConstants::ScreenDim.y - m_bufferTime) : m_bufferTime;
-
-		// Compute shot offset needed to achieve this bounce
 		return latestBounceY - predictedBallY;
 	}
 
@@ -565,7 +570,6 @@ float AutomatedPlayer::GetShotOffset()
 	switch (m_pendingShot)
 	{
 	case ShotTypes::StraightShot:
-		// no offset
 		break;
 	case ShotTypes::StandardShot:
 		shotOffSet = StandardShot();
@@ -626,31 +630,56 @@ float AutomatedPlayer::GenerateReactionDelay()
 void AutomatedPlayer::PredictBallTarget(const Vector2f& paddlePos, const Vector2f& ballVel)
 {
 	const Vector2f ballPos = BallPhysics::GetPosition();
+	if (std::abs(ballVel.x) < 1e-6f) return;
 
-	if (std::abs(ballVel.x) < 1e-6f)
-		return;
-
+	// subtle misread chance (scaled)
 	float miscalculationFactor = 1.0f;
 	static std::uniform_real_distribution<float> oddsDist(0.0f, 1.0f);
-	if (oddsDist(m_gen) < 0.05f)
+	if (oddsDist(m_gen) < 0.03f * m_fallibilityScale)
 	{
 		static std::uniform_int_distribution<int> signDist(0, 1);
-		float adjustment = 0.1f * (signDist(m_gen) == 0 ? 1.0f : -1.0f);
+		float adjustment = 0.08f * (signDist(m_gen) == 0 ? 1.0f : -1.0f);
 		miscalculationFactor += adjustment;
 	}
 
-	m_timeToPaddle = ((paddlePos.x - ballPos.x) / ballVel.x) * miscalculationFactor;
-	m_predictedY = ballPos.y + ballVel.y * m_timeToPaddle;
+	m_timeToPaddle = ((paddlePos.x - ballPos.x) / (ballVel.x == 0 ? 1e-6f : ballVel.x)) * miscalculationFactor;
 
-	const float screenHeight = GameConstants::ScreenDim.y;
-	m_predictedY = std::fmod(m_predictedY + 2 * screenHeight, 2 * screenHeight);
-	if (m_predictedY > screenHeight)
-		m_predictedY = 2 * screenHeight - m_predictedY;
+	float rawPredY = ballPos.y + ballVel.y * m_timeToPaddle;
+	const float H = GameConstants::ScreenDim.y;
+	float foldedY = std::fmod(rawPredY + 2 * H, 2 * H);
+	if (foldedY > H) foldedY = 2 * H - foldedY;
 
-	std::uniform_real_distribution<float> dist(-DifficultyMode::errorVal, DifficultyMode::errorVal);
-	float errorOffset = dist(m_gen) * (m_stress + m_fatigue);
+	float speedMag = std::min(1.0f, std::abs(ballVel.x) / (DifficultyMode::paddleSpeed * 1.25f));
+	std::uniform_real_distribution<float> errDist(-DifficultyMode::errorVal, DifficultyMode::errorVal);
 
-	m_targetY = m_predictedY + errorOffset + GetShotOffset();
+	float noiseAmp = (1.0f + 0.75f * speedMag) * (1.0f + 0.5f * std::max(0.0f, m_stress) + 0.35f * std::max(0.0f, m_fatigue));
+	noiseAmp = std::min(noiseAmp, 1.25f); // guardrail cap
+
+	float errorOffset = errDist(m_gen) * noiseAmp;
+	errorOffset = std::clamp(errorOffset, -10.0f, 10.0f);
+
+	float missChance = (0.03f
+		+ 0.04f * std::clamp(m_stress, 0.0f, 2.0f)
+		+ 0.03f * std::clamp(m_fatigue, 0.0f, 2.0f)
+		+ 0.03f * speedMag) * m_fallibilityScale;
+
+	const bool criticalWindow = (m_timeToPaddle > 0.0f && m_timeToPaddle < 0.22f);
+	bool allowDeliberateMiss = !criticalWindow;
+	bool forceMiss = allowDeliberateMiss && (oddsDist(m_gen) < missChance);
+
+	float missOffset = 0.0f;
+	if (forceMiss)
+	{
+		float sign = (GetYVelocity() >= 0.f) ? 1.f : -1.f;
+		missOffset = sign * (m_edgeBuffer * 0.5f); // near-miss only
+	}
+
+	m_predictedY = foldedY;
+
+	float rawTarget = m_predictedY + errorOffset + missOffset + GetShotOffset();
+
+	// smooth to avoid flapping
+	m_targetY = std::lerp(paddlePos.y, rawTarget, 0.85f);
 
 	m_reactionTimer = 0.0f;
 	m_reactionDelay = GenerateReactionDelay();
@@ -658,63 +687,90 @@ void AutomatedPlayer::PredictBallTarget(const Vector2f& paddlePos, const Vector2
 
 void AutomatedPlayer::UpdateMovement(const Vector2f& paddlePos, float deltaTime)
 {
+	// drop-out cooldown decay
+	m_dropoutCooldown = std::max(0.0f, m_dropoutCooldown - deltaTime);
+	m_timeDelay = std::max(-0.001f, m_timeDelay - deltaTime);
+
 	const float speedAdjustment = 0.5f;
 	const float maxSpeed = DifficultyMode::paddleSpeed;
 	const float diff = m_targetY - paddlePos.y;
 
-	m_timeDelay -= deltaTime;
-	if (m_timeDelay >= 0)
-		return;
+	float speedMag = std::min(1.0f, std::abs(BallPhysics::GetVelocity().x) / (DifficultyMode::paddleSpeed * 1.25f));
+	const bool criticalWindow = (m_timeToPaddle > 0.0f && m_timeToPaddle < 0.22f);
 
-	if (std::abs(diff) > 1.5f)
+	static std::uniform_real_distribution<float> dropoutOdds(0.0f, 1.0f);
+	static std::uniform_real_distribution<float> dropoutDur(0.10f, 0.30f);
+
+	float dropoutChance = (0.02f
+		+ 0.02f * std::clamp(m_stress, 0.0f, 2.0f)
+		+ 0.01f * speedMag) * m_fallibilityScale;
+
+	if (!criticalWindow && m_timeDelay <= 0.0f && m_dropoutCooldown <= 0.0f && dropoutOdds(m_gen) < dropoutChance)
 	{
-		float newVelocity = GetYVelocity() + std::copysign(speedAdjustment, diff);
-		newVelocity = std::clamp(newVelocity, -maxSpeed, maxSpeed);
-		SetYVelocity(newVelocity);
-
-		DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
-		DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
-
-		colMgr->ProcessCollisions(this);
-		Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);
-	}
-	else
-	{
-		SetYVelocity(GetYVelocity() * 0.8f);
-		if (std::abs(GetYVelocity()) < 0.1f)
-			SetYVelocity(0);
+		m_timeDelay = dropoutDur(m_gen);
+		m_dropoutCooldown = 1.0f + speedMag * 0.5f; // spacing between freezes
 	}
 
-	m_timeDelay = 0;
+	if (m_timeDelay > 0.0f) return;
+
+	static std::uniform_real_distribution<float> jitter(-0.05f, 0.05f);
+	float desiredDir = (std::abs(diff) > 1.5f) ? std::copysign(1.0f, diff) : 0.0f;
+	float newVelocity = GetYVelocity() + (desiredDir * speedAdjustment) + jitter(m_gen);
+
+	newVelocity = std::clamp(newVelocity, -maxSpeed, maxSpeed);
+	SetYVelocity(newVelocity);
+
+	if (std::abs(diff) <= 1.5f)
+	{
+		SetYVelocity(GetYVelocity() * 0.85f);
+		if (std::abs(GetYVelocity()) < 0.1f) SetYVelocity(0);
+	}
+
+	DECL_GET_OR_RETURN(gameMgr, GameManager::Get());
+	DECL_GET_OR_RETURN(colMgr, gameMgr->GetCollisionMgr());
+	colMgr->ProcessCollisions(this);
+	Move(0, GetYVelocity() * GameConstants::FPS * deltaTime);
 }
 
 void AutomatedPlayer::ApplyPendingShot()
 {
-	if (!HasCollidedWithBall() || !m_shotReady || m_hasAppliedShot)
-		return;
+	if (!HasCollidedWithBall() || !m_shotReady || m_hasAppliedShot) return;
 
-	switch (m_pendingShot)
+	static std::uniform_real_distribution<float> odds(0.0f, 1.0f);
+
+	auto misfire = [&](ShotTypes intended) {
+		float stressPos = std::max(0.0f, m_stress);
+		float base = (stressPos > 0.2f && m_misfireCooldown <= 0.0f)
+			? (0.02f + 0.03f * std::clamp(stressPos, 0.0f, 2.0f))
+			: 0.0f;
+		float misOdds = base * m_fallibilityScale;
+
+		if (odds(m_gen) >= misOdds) return intended;
+
+		m_misfireCooldown = 6.0f;
+
+		switch (intended) {
+		case ShotTypes::TopSpinShot:    return ShotTypes::BackSpinShot;
+		case ShotTypes::BackSpinShot:   return ShotTypes::TopSpinShot;
+		case ShotTypes::LeftSpinShot:   return ShotTypes::RightSpinShot;
+		case ShotTypes::RightSpinShot:  return ShotTypes::LeftSpinShot;
+		case ShotTypes::FastShot:       return ShotTypes::SlowShot;
+		case ShotTypes::SlowShot:       return ShotTypes::FastShot;
+		default:                        return intended;
+		}
+		};
+
+	int toApply = (int)misfire(static_cast<ShotTypes>(m_pendingShot));
+
+	switch (toApply)
 	{
-	case ShotTypes::FastShot:
-		BallPhysics::ApplyVelocityIncrease(DifficultyMode::speedFactor);
-		break;
-	case ShotTypes::SlowShot:
-		BallPhysics::ApplyVelocityDecrease(DifficultyMode::speedFactor);
-		break;
-	case ShotTypes::TopSpinShot:
-		BallPhysics::ApplyTopSpin(DifficultyMode::speedFactor);
-		break;
-	case ShotTypes::BackSpinShot:
-		BallPhysics::ApplyBackSpin(DifficultyMode::speedFactor);
-		break;
-	case ShotTypes::LeftSpinShot:
-		BallPhysics::ApplyLeftSpin(DifficultyMode::speedFactor);
-		break;
-	case ShotTypes::RightSpinShot:
-		BallPhysics::ApplyRightSpin(DifficultyMode::speedFactor);
-		break;
-	default:
-		break;
+	case ShotTypes::FastShot:        BallPhysics::ApplyVelocityIncrease(DifficultyMode::speedFactor); break;
+	case ShotTypes::SlowShot:        BallPhysics::ApplyVelocityDecrease(DifficultyMode::speedFactor); break;
+	case ShotTypes::TopSpinShot:     BallPhysics::ApplyTopSpin(DifficultyMode::speedFactor); break;
+	case ShotTypes::BackSpinShot:    BallPhysics::ApplyBackSpin(DifficultyMode::speedFactor); break;
+	case ShotTypes::LeftSpinShot:    BallPhysics::ApplyLeftSpin(DifficultyMode::speedFactor); break;
+	case ShotTypes::RightSpinShot:   BallPhysics::ApplyRightSpin(DifficultyMode::speedFactor); break;
+	default: break;
 	}
 
 	m_hasAppliedShot = true;
